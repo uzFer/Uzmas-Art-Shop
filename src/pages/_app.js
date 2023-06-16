@@ -4,9 +4,10 @@ const GlobalStyles = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Dosis:wght@300&family=Great+Vibes&family=Quicksand:wght@300&display=swap');
 
   body {
+    background-color: #eee;
     padding: 0;
     margin: 0;
-    font-family: 'Dosis', sans-serif;
+    font-family: 'Courier New', monospace;
   }
 `;
 
