@@ -3,11 +3,11 @@ import Header from "@/components/Header";
 import mongooseConnect from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 
-export default function HomePage({product}) {
+export default function HomePage({featuredProduct}) {
   return (
     <div>
       <Header />
-      <Featured />
+      <Featured product={featuredProduct}/>
     </div>
   );
 }
@@ -15,10 +15,11 @@ export default function HomePage({product}) {
 export async function getServerSideProps() {
   const featuredProdID = '648ca85048dac8a0f94dc539';
   await mongooseConnect();
-  const product = await Product.findById(featuredProdID);
+  const featuredProduct = await Product.findById(featuredProdID);
 
   return {
-    props: {product},
-
+    props: {
+      featuredProduct: JSON.parse(JSON.stringify(featuredProduct)),
+    },
   };
 }

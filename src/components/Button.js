@@ -1,6 +1,6 @@
 import styled, {css} from "styled-components";
 
-const StyledButton = styled.button`
+export const ButtonStyle = css`
   font-family: 'Courier New', monospace;
   border: 0;
   cursor: pointer;
@@ -8,6 +8,7 @@ const StyledButton = styled.button`
   border-radius: 5px;
   display: inline-flex;
   align-items: center;
+  text-decoration: none;
   transition: all 0.2s ease-in-out;
   ${props => props.white && !props.outline && css`
     background-color: #fff;
@@ -38,6 +39,10 @@ const StyledButton = styled.button`
       margin-right: 10px;
     }
   `}
+`;
+
+const StyledButton = styled.button`
+  ${ButtonStyle}
 `;
 
 
