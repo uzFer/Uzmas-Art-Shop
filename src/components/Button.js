@@ -1,3 +1,4 @@
+import { green, primary } from "@/lib/colours";
 import styled, {css} from "styled-components";
 
 export const ButtonStyle = css`
@@ -23,12 +24,22 @@ export const ButtonStyle = css`
       color: #000;
     }
   `}
-  ${props => props.primary && css`
-    background-color: #8f5cf7;
-    border: 1px solid #8f5cf7;
+  ${props => props.primary && !props.outline && css`
+    background-color: ${primary}; 
+    border: 1px solid ${primary};
     color: #fff;
     &:hover {
       background-color: transparent;
+    }
+  `}
+  ${props => props.green && props.outline && css`
+    background-color: transparent;
+    border: 1px solid ${green};
+    color: ${green};
+    font-weight: bold;
+    &:hover {
+      background-color: ${green};
+      color: #fff;
     }
   `}
   ${props => props.size === 'l' && css`
@@ -37,6 +48,12 @@ export const ButtonStyle = css`
     svg {
       height: 20px;
       margin-right: 10px;
+    }
+  `}
+  ${props => props.size === 'm' && css`
+    padding: 5px 15px;
+    svg {
+      height: 20px;
     }
   `}
 `;

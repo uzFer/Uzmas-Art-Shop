@@ -8,13 +8,13 @@ const ProductWrapper = styled.div`
 
 const WhiteBox = styled.div`
     background-color: #fff;
-    padding: 20px;
-    height: 240px;
+    padding: 15px;
+    height: 260px;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 5px;
     img {
         max-width: 100%;
         max-height: 100%;
@@ -28,14 +28,14 @@ const Title = styled.h2`
 `;
 
 const ProductInfoBox = styled.div`
-    margin-top: 10px;
+    margin-top: 5px;
 `;
 
 const PriceBox = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 5px;
+    margin-top: 2px;
 `;
 
 const Price = styled.div`
@@ -54,11 +54,11 @@ export default function ProductBox({_id, name, description, price, images}) {
             <ProductInfoBox>
                 <Title>{name}</Title>
                 <PriceBox>
-                    <div>
+                    <Price>
                         ${price}
-                    </div>
-                    <Button primary>
-                    <CartIcon />
+                    </Price>
+                    <Button green outline size="m">
+                        Add to cart
                     </Button>
                 </PriceBox>
             </ProductInfoBox>
