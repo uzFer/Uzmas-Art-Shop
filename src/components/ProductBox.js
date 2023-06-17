@@ -33,6 +33,14 @@ const ProductInfoBox = styled.div`
 
 const PriceBox = styled.div`
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+`;
+
+const Price = styled.div`
+    font-size: 1.5rem;
+    font-weight: bold;
 `;
 
 export default function ProductBox({_id, name, description, price, images}) {
@@ -49,10 +57,10 @@ export default function ProductBox({_id, name, description, price, images}) {
                     <div>
                         ${price}
                     </div>
-                </PriceBox>
-                <Button primary>
+                    <Button primary>
                     <CartIcon />
-                </Button>
+                    </Button>
+                </PriceBox>
             </ProductInfoBox>
         </ProductWrapper>
     );
