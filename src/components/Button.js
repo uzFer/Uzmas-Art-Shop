@@ -2,7 +2,6 @@ import { green, primary } from "@/lib/colours";
 import styled, {css} from "styled-components";
 
 export const ButtonStyle = css`
-  font-family: 'Courier New', monospace;
   border: 0;
   cursor: pointer;
   padding: 5px 15px;
@@ -11,9 +10,14 @@ export const ButtonStyle = css`
   align-items: center;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
+  font-family: 'Courier New', monospace;
   ${props => props.white && !props.outline && css`
     background-color: #fff;
     color: #000;
+  `}
+  ${props => props.block && css`
+    display: block;
+    width: 100%;
   `}
   ${props => props.white && props.outline && css`
     background-color: transparent;
@@ -32,13 +36,13 @@ export const ButtonStyle = css`
       background-color: transparent;
     }
   `}
-  ${props => props.green && props.outline && css`
-    background-color: transparent;
-    border: 1px solid ${green};
-    color: ${green};
+  ${props => props.black && props.outline && css`
+    background-color: #222;
+    border: 1px solid #fff;
+    color: #fff;
     font-weight: bold;
     &:hover {
-      background-color: ${green};
+      background-color: ${primary};
       color: #fff;
     }
   `}
