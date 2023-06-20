@@ -18,9 +18,16 @@ const WhiteBox = styled(Link)`
     align-items: center;
     justify-content: center;
     border-radius: 5px;
+    transition: all 0.3s ease-in-out;
     img {
         max-width: 100%;
         max-height: 100%;
+        box-shadow: 0px 6px 8px 0 rgba(0, 0, 0, 0.2), 0px 6px 20px 0 rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+        &:hover {
+            box-shadow: none;
+            background-color: #fff;
+        }
     }
 `;
 
