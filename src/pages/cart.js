@@ -49,7 +49,7 @@ const CityHolder = styled.div`
 `;
 
 export default function CartPage() { 
-    const {cartProducts, addProduct, removeProduct} = useContext(CartContext);
+    const {cartProducts, addProduct, removeProduct, clearCart} = useContext(CartContext);
     const [products, setProducts] = useState([]);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -101,6 +101,10 @@ export default function CartPage() {
         }
         if(window?.location.href.includes('success')) {
             setPaymentSuccessful(true);
+            clearCart();
+        }
+        else {
+            setPaymentSuccessful(false);
         }
     }, []); 
 
