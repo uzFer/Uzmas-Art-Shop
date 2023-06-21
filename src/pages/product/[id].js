@@ -1,46 +1,84 @@
 import Box from "@/components/Box";
+import Button from "@/components/Button";
+import { CartContext } from "@/components/CartContext";
 import Center from "@/components/Center";
 import Header from "@/components/Header";
+import ProductImages from "@/components/ProductImages";
 import Title from "@/components/Title";
 import mongooseConnect from "@/lib/mongoose";
 import { Product } from "@/models/Product";
+import { useContext } from "react";
 import { styled } from "styled-components";
 
 const ColWrapper = styled.div` 
     display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
+    grid-template-columns: 1fr;
     gap: 40px;
     margin-top: 40px;
-    img {
-        max-width: 100%;
-        max-height: 100%;
-        box-shadow: 0px 6px 8px 0 rgba(0, 0, 0, 0.2), 0px 6px 20px 0 rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease-in-out;
-        &:hover {
-            cursor: pointer;
-            box-shadow: none;
-            background-color: #fff;
-        }
+    @media screen and (min-width: 768px) {
+        grid-template-columns: 0.8fr 1.2fr;
     }
+`;
+
+const Wrapper = styled.div` 
+    text-align: center;
+    @media screen and (min-width: 768px) {
+        text-align: left;
+    }
+`;
+
+const ProductInfo = styled.div`
+    margin-bottom: 30px;
+`;
+
+const PriceRow = styled.div`
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    @media screen and (min-width: 768px) {
+        justify-content: left;
+    }
+`;
+
+const Price = styled.span`
+    font-size: 1.6rem;
+    font-weight: bold;
 `;
 
 
 export default function ProductPage({product}) {
+    const {addProduct} = useContext(CartContext);
+
     return (
-        <>
+        <Wrapper>
             <Header />
             <Center>
                 <ColWrapper>
                     <Box>
-                        <img src={product.images?.[0]} />
+                        <ProductImages images={product.images}></ProductImages>
                     </Box>
                     <div>
-                        <Title>{product.name}</Title>
-                        <p>{product.description}</p>
+                        <ProductInfo>
+                            <Title>{product.name}</Title>
+                            <p>{product.description}</p>
+                        </ProductInfo>
+                        <PriceRow>
+                            <div>
+                                <Price>
+                                    ${product.price}
+                                </Price>
+                            </div>
+                            <div>
+                                <Button black outline onClick={() => addProduct(product._id)}>
+                                    Add to cart
+                                </Button>
+                            </div>
+                        </PriceRow>
                     </div>
                 </ColWrapper>
             </Center>
-        </>
+        </Wrapper>
     );
 }
 

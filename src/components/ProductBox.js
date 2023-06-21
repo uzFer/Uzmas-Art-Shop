@@ -40,19 +40,31 @@ const Title = styled(Link)`
 `;
 
 const ProductInfoBox = styled.div`
+    text-align: center;
     margin-top: 5px;
+    @media screen and (min-width: 768px) {
+        text-align: left;
+    }
 `;
 
 const PriceBox = styled.div`
-    display: flex;
+    display: block;
     align-items: center;
     justify-content: space-between;
     margin-top: 2px;
+    @media screen and (min-width: 768px) {
+        display: flex;
+        gap: 5px;
+    }
 `;
 
 const Price = styled.div`
     font-size: 1.5rem;
     font-weight: bold;
+    margin-bottom: 10px;
+    @media screen and (min-width: 768px) {
+        margin-bottom: 0;
+    }
 `;
 
 export default function ProductBox({_id, name, description, price, images}) {

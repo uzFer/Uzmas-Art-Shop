@@ -11,9 +11,12 @@ import { styled } from "styled-components";
 
 const ColWrapper = styled.div`
     display: grid;
-    grid-template-columns: 1.3fr 0.7fr;
+    grid-template-columns: 1fr;
     gap: 40px;
     margin-top: 40px;
+    @media screen and (min-width: 768px) {
+        grid-template-columns: 1.3fr 0.7fr;
+    }
 `;
 
 const ProductInfoBox = styled.td`
@@ -21,21 +24,41 @@ const ProductInfoBox = styled.td`
 `;
 
 const ProductImageBox = styled.div`
-    width: 160px;
-    height: 130px;
-    padding: 10px;
-    background-color: #eee;
+    width: 100%;
+    height: 100%;
+    padding: 2px;
+    background-color: #fff;
     border-radius: 10px;
     display: flex;
     justify-content: center;
     img {
         max-width: 100%;
         max-height: 130px;
+        margin-right: 30px;
     }
+    @media screen and (min-width: 768px) {
+        background-color: #eee;
+        margin-right: 0px;
+        padding: 10px;
+        height: 130px;
+        width: 160px;
+        img {
+            margin-right: 0px;
+        }
+    }
+`;
+
+const QuantityWrapper = styled.div`
+    text-align: center;
 `;
 
 const QuantityLabel = styled.span`
     padding: 0 3px;
+    display: block;
+    text-align: center;
+    @media screen and (min-width: 768px) {
+        display: inline-block;
+    }
 `;
 
 const CityHolder = styled.div`
@@ -149,11 +172,13 @@ export default function CartPage() {
                                                 {product.name}
                                             </ProductInfoBox>  
                                             <td>
-                                                <Button  onClick={() => decreaseProduct(product._id)}>-</Button>
-                                                <QuantityLabel>
-                                                    {cartProducts.filter(id => id === product._id).length}
-                                                </QuantityLabel>
-                                                <Button onClick={() => increaseProduct(product._id)}>+</Button>
+                                                <QuantityWrapper>
+                                                    <Button  onClick={() => decreaseProduct(product._id)}>-</Button>
+                                                    <QuantityLabel>
+                                                        {cartProducts.filter(id => id === product._id).length}
+                                                    </QuantityLabel>
+                                                    <Button onClick={() => increaseProduct(product._id)}>+</Button>
+                                                </QuantityWrapper>
                                             </td>
                                             <td>
                                                 ${(cartProducts.filter(id => id === product._id).length * product.price).toFixed(2)}

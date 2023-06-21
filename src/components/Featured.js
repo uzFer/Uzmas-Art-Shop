@@ -15,7 +15,10 @@ const Background = styled.div`
 const Title = styled.h1`
     margin: 0;
     font-weight: normal;
-    font-size: 5rem;
+    font-size: 3.5rem;
+    @media screen and (min-width: 768px) {
+        font-size: 5rem;
+    }
 `;
 
 const Description = styled.p`
@@ -25,23 +28,44 @@ const Description = styled.p`
 
 const ColWrapper = styled.div`
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 40px;
     img {
         max-width: 100%;
+        max-height: 300px;
+    }
+    div:nth-child(1) {
+        order: 2;
+    }
+    @media screen and (min-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+        div:nth-child(1) {
+            order: 0;
+        }
+        img {
+            max-width: 100%;
+        }
     }
 `;
 
 const Col = styled.div`
     display: flex;
     align-items: center;
+    text-align: center;
     flex-direction: column;
+    @media screen and (min-width: 768px) {
+        text-align: left;
+    }
 `;
 
 const ButtonWrapper = styled.div`
     display: flex;
+    justify-content: center;
     gap: 10px;
     margin-top: 30px;
+    @media screen and (min-width: 768px) {
+        justify-content: start;
+    }
 `;
 
 export default function Featured({product}) {
@@ -60,7 +84,7 @@ export default function Featured({product}) {
                             <Title>{product?.name}</Title>
                             <Description>{product?.description}</Description>
                             <ButtonWrapper>
-                                <ButtonLink href={'/products/' + product._id} outline={1} white={1} size="l">Read more</ButtonLink>
+                                <ButtonLink href={'/product/' + product._id} outline={1} white={1} size="l">Read more</ButtonLink>
                                 <Button primary size="l" onClick={addFeaturedToCart}>
                                     <CartIcon />
                                     Add to cart
