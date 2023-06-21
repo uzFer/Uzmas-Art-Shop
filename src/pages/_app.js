@@ -9,6 +9,7 @@ const GlobalStyles = createGlobalStyle`
     padding: 0;
     margin: 0 0 50px 0;
     font-family: 'Courier New', monospace;
+    scroll-behavior: smooth;
   }
 `;
 
