@@ -54,10 +54,10 @@ const Tag = styled.div`
 
 const TagTitle = styled.span`
     ${props => props.type === 'Realistic' && css`
-        background: #B2FEFA;  /* fallback for old browsers */
-        background: -webkit-linear-gradient(to right, #0ED2F7, #B2FEFA);  /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to right, #0ED2F7, #B2FEFA); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-        border: 1px solid #5481c4;
+    background: #2193b0;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #6dd5ed, #2193b0);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #6dd5ed, #2193b0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border: 1px solid #5481c4;
     `}
     ${props => props.type === 'Abstract' && css`
         background: #A770EF;  /* fallback for old browsers */

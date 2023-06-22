@@ -40,7 +40,7 @@ const customStyles = {
       backgroundColor: "#222",
       border: "none",
       boxShadow: "none",
-      cursor: "pointer"
+      cursor: "pointer",
     }),
     singleValue: (defaultStyles) => ({ ...defaultStyles, color: "#fff" }),
 };

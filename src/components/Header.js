@@ -3,12 +3,14 @@ import styled, { css } from "styled-components";
 import Center from "./Center";
 import { useContext, useState } from "react";
 import { CartContext } from "./CartContext";
-import HamburgerIcon from "./icons/Hamburger";
-import CloseIcon from "./icons/Close";
-
+import HamburgerIcon from "./icons/HamburgerIcon";
+import CloseIcon from "./icons/CloseIcon";
+import SearchIcon from "./icons/SearchIcon";
 
 const StyledHeader = styled.header`
     background-color: #222;
+    position: relative;
+    z-index: 3;
 `;
 
 const Logo = styled(Link)`
@@ -32,9 +34,12 @@ const Wrapper = styled.div`
 `;
 
 const StyledNav = styled.nav`
-    ${props => props.show ? `
+    ${props => props.showMobileNav ? `
         display: block;
     ` : `
+        display: none;
+    `};
+    ${props => props.showSearch && css`
         display: none;
     `};
     transition: all 0.3s ease-in-out;
@@ -46,10 +51,15 @@ const StyledNav = styled.nav`
     right: 0;
     padding: 70px 20px 20px;
     background-color: #222;
-
+    svg {
+        height: 20px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
     @media screen and (min-width: 768px) {
         display: flex;
         position: static;
+        align-items: center;
         padding: 0;
     }
 `;
@@ -81,9 +91,43 @@ const NavButton = styled.button`
     }
 `;
 
-export default function Header() {
+const Searchbar = styled.input`
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 10px;
+    font-family: inherit;
+    box-sizing: border-box;
+`;
+
+const SuggestionWrapper = styled.div`
+    flex-direction: column;
+    position: absolute;
+    overflow-x: hidden;
+`;
+
+const Suggestion = styled.div`
+    border: 1px solid #f3f3f3;
+    background-color: white;
+    &:hover {
+        background-color: #ccc;
+        cursor: pointer;
+    }
+`;
+
+const SearchWrapper = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+export default function Header({products}) {
     const {cartProducts} = useContext(CartContext);
-    const [showNav, setShowNav] = useState(false);
+    const [showMobileNav, setShowMobileNav] = useState(false);
+    const [showSearch, setShowSearch] = useState(false);
+    const [searchEntry, setSearchEntry] = useState('');
+
+    const handleChange = (search) => {
+        setSearchEntry(search);
+    }
 
     return (
         <StyledHeader>
@@ -95,15 +139,38 @@ export default function Header() {
                         </svg>
                         Uzma&apos;s Art Shop
                     </Logo>
-                    <StyledNav show={showNav}>
+                    <StyledNav showMobileNav={showMobileNav}>
                         <NavLink href={'/'}>Home</NavLink>
                         <NavLink href={'/products'}>Paintings</NavLink>
                         <NavLink href={'/account'}>Account</NavLink>
                         <NavLink href={'/cart'}>Cart ({cartProducts.length})</NavLink>
+                       
+                        <div>
+                            <SearchWrapper>
+                                <Searchbar 
+                                    showSearch={true} 
+                                    type="text" 
+                                    placeholder="Search..."
+                                    value={searchEntry}
+                                    onChange={(e) => handleChange(e.target.value)}
+                                />
+                                <SearchIcon /> 
+                            </SearchWrapper>
+                            
+                            <SuggestionWrapper>
+                            {products?.map(product => (
+                                <>
+                                {searchEntry !== '' && product.name.toLowerCase().includes(searchEntry.toLowerCase()) &&
+                                    <Suggestion>{product.name}</Suggestion>
+                                }
+                                </>
+                            ))}
+                            </SuggestionWrapper>
+                        </div>
                     </StyledNav> 
                     
-                    <NavButton onClick={() => setShowNav(!showNav)}>
-                        {showNav ? <CloseIcon /> : <HamburgerIcon />}
+                    <NavButton onClick={() => setShowMobileNav(!showMobileNav)}>
+                        {showMobileNav ? <CloseIcon /> : <HamburgerIcon />}
                     </NavButton>
                 </Wrapper>
             </Center>
