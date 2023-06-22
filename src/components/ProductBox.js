@@ -12,7 +12,7 @@ const ProductWrapper = styled.div`
 const WhiteBox = styled(Link)`
     background-color: #eee;
     padding: 15px;
-    height: 260px;
+    height: 250px;
     text-align: center;
     display: flex;
     align-items: center;

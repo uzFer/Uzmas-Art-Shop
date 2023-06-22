@@ -56,7 +56,7 @@ const QuantityLabel = styled.span`
     padding: 0 3px;
     display: block;
     text-align: center;
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 830px) {
         display: inline-block;
     }
 `;

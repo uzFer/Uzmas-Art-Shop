@@ -6,9 +6,10 @@ import Header from "@/components/Header";
 import ProductImages from "@/components/ProductImages";
 import Title from "@/components/Title";
 import mongooseConnect from "@/lib/mongoose";
+import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import { useContext } from "react";
-import { styled } from "styled-components";
+import { css, styled } from "styled-components";
 
 const ColWrapper = styled.div` 
     display: grid;
@@ -46,8 +47,32 @@ const Price = styled.span`
     font-weight: bold;
 `;
 
+const Tag = styled.div`
+    padding: 10px 0;
+    margin-bottom: 20px;
+`;
 
-export default function ProductPage({product}) {
+const TagTitle = styled.span`
+    ${props => props.type === 'Realistic' && css`
+        background: #B2FEFA;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #0ED2F7, #B2FEFA);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #0ED2F7, #B2FEFA); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        border: 1px solid #5481c4;
+    `}
+    ${props => props.type === 'Abstract' && css`
+        background: #A770EF;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #FDB99B, #CF8BF3, #A770EF);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #FDB99B, #CF8BF3, #A770EF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        border: 1px solid #8562b3;
+    `}
+    
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 5px 10px;
+`;
+
+export default function ProductPage({product, categories}) {
     const {addProduct} = useContext(CartContext);
 
     return (
@@ -60,9 +85,18 @@ export default function ProductPage({product}) {
                     </Box>
                     <div>
                         <ProductInfo>
-                            <Title>{product.name}</Title>
+                            <h1>{product.name}</h1>
                             <p>{product.description}</p>
                         </ProductInfo>
+                        {categories?.map(category => (
+                            <>
+                            {category._id === product.category &&
+                                <Tag>
+                                    <TagTitle type={category.name}>{category.name}</TagTitle>
+                                </Tag>
+                            }
+                            </>
+                        ))}
                         <PriceRow>
                             <div>
                                 <Price>
@@ -85,10 +119,13 @@ export default function ProductPage({product}) {
 export async function getServerSideProps(context) {
     await mongooseConnect();
     const {id} = context.query;
+    console.log(context)
     const product = await Product.findById(id);
-    
+    const categories = await Category.find({}, null, {sort:{'_id': -1}});
+
     return {
         props: {
+            categories: JSON.parse(JSON.stringify(categories)),
             product: JSON.parse(JSON.stringify(product)),
         }
     };

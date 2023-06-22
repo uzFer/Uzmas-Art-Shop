@@ -1,2 +1,2 @@
-export const primary = '#8f5cf7';
+export const primary = '#55387a';
 export const green = '#338733';
