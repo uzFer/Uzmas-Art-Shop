@@ -79,7 +79,7 @@ export default function ProductsPage({products}) {
 
     return (
         <>
-            <Header />
+            <Header products={products} />
             <Center>
                 <Wrapper>
                     <Title props={'All Products'} />
@@ -107,6 +107,7 @@ export async function getServerSideProps() {
     await mongooseConnect();
     const categories = await Category.find({}, null, {sort:{'_id': -1}});
     const products = await Product.find({}, null, {sort:{'_id': -1}});
+    
     return { 
         props: {
             categories: JSON.parse(JSON.stringify(categories)),

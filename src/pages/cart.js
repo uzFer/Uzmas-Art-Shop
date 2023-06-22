@@ -8,6 +8,8 @@ import Table from "@/components/Table";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
+import mongooseConnect from "@/lib/mongoose";
+import { Product } from "@/models/Product";
 
 const ColWrapper = styled.div`
     display: grid;
@@ -66,7 +68,7 @@ const CityHolder = styled.div`
     gap: 5px;
 `;
 
-export default function CartPage() { 
+export default function CartPage({allProducts}) { 
     const {cartProducts, addProduct, removeProduct, clearCart} = useContext(CartContext);
     const [products, setProducts] = useState([]);
     const [name, setName] = useState('');
@@ -130,7 +132,7 @@ export default function CartPage() {
     if(paymentSuccessful) {
         return (
             <>
-                <Header />
+                <Header products={allProducts} />
                 <Center>
                     <ColWrapper>
                     </ColWrapper>
@@ -145,7 +147,7 @@ export default function CartPage() {
 
     return (
         <div>
-            <Header />
+            <Header products={allProducts} />
             <Center> 
                 <ColWrapper>
                     <Box>
@@ -246,4 +248,15 @@ export default function CartPage() {
             </Center>
         </div>
     );
+}
+
+export async function getServerSideProps() {
+    await mongooseConnect();
+    const products = await Product.find({}, null, {sort:{'_id': -1}});
+    
+    return { 
+        props: {
+            allProducts: JSON.parse(JSON.stringify(products)),
+        }
+    };
 }

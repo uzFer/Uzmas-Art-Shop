@@ -105,9 +105,11 @@ const SuggestionWrapper = styled.div`
     overflow-x: hidden;
 `;
 
-const Suggestion = styled.div`
+const Suggestion = styled(Link)`
     border: 1px solid #f3f3f3;
     background-color: white;
+    text-decoration: none;
+    display: block;
     &:hover {
         background-color: #ccc;
         cursor: pointer;
@@ -122,7 +124,6 @@ const SearchWrapper = styled.div`
 export default function Header({products}) {
     const {cartProducts} = useContext(CartContext);
     const [showMobileNav, setShowMobileNav] = useState(false);
-    const [showSearch, setShowSearch] = useState(false);
     const [searchEntry, setSearchEntry] = useState('');
 
     const handleChange = (search) => {
@@ -148,7 +149,6 @@ export default function Header({products}) {
                         <div>
                             <SearchWrapper>
                                 <Searchbar 
-                                    showSearch={true} 
                                     type="text" 
                                     placeholder="Search..."
                                     value={searchEntry}
@@ -161,7 +161,7 @@ export default function Header({products}) {
                             {products?.map(product => (
                                 <>
                                 {searchEntry !== '' && product.name.toLowerCase().includes(searchEntry.toLowerCase()) &&
-                                    <Suggestion>{product.name}</Suggestion>
+                                    <Suggestion href={'/product/' + product._id}>{product.name}</Suggestion>
                                 }
                                 </>
                             ))}

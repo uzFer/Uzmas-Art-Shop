@@ -1,24 +1,27 @@
 import Center from "@/components/Center";
 import Header from "@/components/Header";
-import { styled } from "styled-components";
+import Title from "@/components/Title";
+import mongooseConnect from "@/lib/mongoose";
+import { Product } from "@/models/Product";
 
-const Title = styled.h2`
-    font-size: 2rem;
-    padding: 10px;
-    width: 235px;
-    border-radius: 20px;
-    margin: 30px 0 20px;
-    font-weight: bold;
-    background-color: #c1d955;
-`;
-
-export default function ProductsPage({products}) {
+export default function AccountPage({allProducts}) {
     return (
         <>
-            <Header />
+            <Header products={allProducts} />
             <Center>
-                <Title>Your Account</Title>
+                <Title props={'Your account'} />
             </Center>
         </>
     );
+}
+
+export async function getServerSideProps() {
+    await mongooseConnect();
+    const products = await Product.find({}, null, {sort:{'_id': -1}});
+    
+    return { 
+        props: {
+            allProducts: JSON.parse(JSON.stringify(products)),
+        }
+    };
 }

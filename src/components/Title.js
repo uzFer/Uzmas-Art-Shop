@@ -1,3 +1,4 @@
+import { primary } from "@/lib/colours";
 import { styled } from "styled-components";
 
 const TitleWrapper = styled.h2`
@@ -6,11 +7,12 @@ const TitleWrapper = styled.h2`
 `;
 
 const TitleText = styled.span`
-    font-size: 2rem;
+    font-size: 1.9rem;
     padding: 10px;
     border-radius: 20px;
     font-weight: bold;
-    background-color: #c1d955;
+    background-color: #222;
+    color: #fff;
 `;
 
 export default function Title({props}) {
