@@ -1,11 +1,11 @@
 import Link from "next/link";
 import styled, { css } from "styled-components";
 import Center from "./Center";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
 import HamburgerIcon from "./icons/HamburgerIcon";
 import CloseIcon from "./icons/CloseIcon";
-import SearchIcon from "./icons/SearchIcon";
+import SearchButton from "./SearchButton";
 
 const StyledHeader = styled.header`
     background-color: #222;
@@ -103,6 +103,7 @@ const SuggestionWrapper = styled.div`
     flex-direction: column;
     position: absolute;
     overflow-x: hidden;
+    padding: 0 5px;
 `;
 
 const Suggestion = styled(Link)`
@@ -154,14 +155,16 @@ export default function Header({products}) {
                                     value={searchEntry}
                                     onChange={(e) => handleChange(e.target.value)}
                                 />
-                                <SearchIcon /> 
+                                <SearchButton url={'/search/' + searchEntry} /> 
                             </SearchWrapper>
                             
                             <SuggestionWrapper>
                             {products?.map(product => (
                                 <>
                                 {searchEntry !== '' && product.name.toLowerCase().includes(searchEntry.toLowerCase()) &&
-                                    <Suggestion href={'/product/' + product._id}>{product.name}</Suggestion>
+                                    <Suggestion href={'/product/' + product._id}>
+                                        {product.name}
+                                    </Suggestion>
                                 }
                                 </>
                             ))}

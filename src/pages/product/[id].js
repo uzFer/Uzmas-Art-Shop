@@ -4,11 +4,10 @@ import { CartContext } from "@/components/CartContext";
 import Center from "@/components/Center";
 import Header from "@/components/Header";
 import ProductImages from "@/components/ProductImages";
-import Title from "@/components/Title";
 import mongooseConnect from "@/lib/mongoose";
 import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { css, styled } from "styled-components";
 
 const ColWrapper = styled.div` 
@@ -72,12 +71,15 @@ const TagTitle = styled.span`
     padding: 5px 10px;
 `;
 
-export default function ProductPage({product, categories}) {
+export default function ProductPage({product, categories, allProducts}) {
     const {addProduct} = useContext(CartContext);
 
+    useEffect(() => {
+
+    }, [product])
     return (
         <Wrapper>
-            <Header />
+            <Header products={allProducts}/>
             <Center>
                 <ColWrapper>
                     <Box>
@@ -121,12 +123,14 @@ export async function getServerSideProps(context) {
     const {id} = context.query;
     console.log(context)
     const product = await Product.findById(id);
+    const products = await Product.find({}, null, {sort:{'_id': -1}});
     const categories = await Category.find({}, null, {sort:{'_id': -1}});
 
     return {
         props: {
             categories: JSON.parse(JSON.stringify(categories)),
             product: JSON.parse(JSON.stringify(product)),
+            allProducts: JSON.parse(JSON.stringify(products)),
         }
     };
 }

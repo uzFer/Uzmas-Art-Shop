@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 const Image = styled.img`
@@ -46,6 +46,9 @@ const ImageWrapper = styled.div`
 export default function ProductImages({images}) {
     const [activeImage, setActiveImage] = useState(images?.[0]);
 
+    useEffect(() => {
+        setActiveImage(images?.[0])
+    }, [images])
     return (
         <>
             <ImageWrapper>

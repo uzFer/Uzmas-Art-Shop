@@ -5,8 +5,8 @@ import Title from "@/components/Title";
 import mongooseConnect from "@/lib/mongoose";
 import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
-import { useEffect, useState } from "react";
-import Select, { StylesConfig } from "react-select";
+import { useState } from "react";
+import Select from "react-select";
 import { styled } from "styled-components";
 
 const Wrapper = styled.div`
