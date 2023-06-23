@@ -56,11 +56,12 @@ const StyledNav = styled.nav`
         margin-right: 5px;
         cursor: pointer;
     }
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 790px) {
         display: flex;
         position: static;
         align-items: center;
         padding: 0;
+        gap: 15px;
     }
 `;
 
@@ -69,11 +70,14 @@ const NavLink = styled(Link)`
     display: block;
     text-decoration: none;
     padding: 10px 0;
+    margin-bottom: 20px;
+    text-align: left;
     &:hover {
         color: #9e9e9e;
     }
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 790px) {
         padding: 0;
+        margin: 0;
     }
 `;
 
@@ -86,7 +90,7 @@ const NavButton = styled.button`
     cursor: pointer;
     position: relative;
     z-index: 3;
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 790px) {
         display: none;
     }
 `;
@@ -107,10 +111,16 @@ const SuggestionWrapper = styled.div`
 `;
 
 const Suggestion = styled(Link)`
+    ${props => props.show ? `
+        display: block;
+    ` : `
+        display: none;
+    `};
     border: 1px solid #f3f3f3;
     background-color: white;
     text-decoration: none;
-    display: block;
+    color: #000;
+    padding: 10px 0 10px 2px;
     &:hover {
         background-color: #ccc;
         cursor: pointer;
@@ -126,6 +136,7 @@ export default function Header({products}) {
     const {cartProducts} = useContext(CartContext);
     const [showMobileNav, setShowMobileNav] = useState(false);
     const [searchEntry, setSearchEntry] = useState('');
+    const [showSuggestions, setShowSuggestions] = useState(true);
 
     const handleChange = (search) => {
         setSearchEntry(search);
@@ -151,18 +162,25 @@ export default function Header({products}) {
                             <SearchWrapper>
                                 <Searchbar 
                                     type="text" 
+                                    onBlur={() => setShowSuggestions(false)}
+                                    onFocus={() => setShowSuggestions(true)}
                                     placeholder="Search..."
                                     value={searchEntry}
                                     onChange={(e) => handleChange(e.target.value)}
                                 />
-                                <SearchButton url={'/search/' + searchEntry} /> 
+                                <SearchButton
+                                    onClick={() => setShowMobileNav(false)} 
+                                    url={searchEntry === '' ? '/' : '/search/' + searchEntry} /> 
                             </SearchWrapper>
                             
                             <SuggestionWrapper>
                             {products?.map(product => (
                                 <>
                                 {searchEntry !== '' && product.name.toLowerCase().includes(searchEntry.toLowerCase()) &&
-                                    <Suggestion href={'/product/' + product._id}>
+                                    <Suggestion 
+                                        onClick={() => setShowMobileNav(false)} 
+                                        show={showSuggestions}
+                                        href={'/product/' + product._id}>
                                         {product.name}
                                     </Suggestion>
                                 }

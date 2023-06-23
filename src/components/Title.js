@@ -7,11 +7,10 @@ const TitleWrapper = styled.h2`
 `;
 
 const TitleText = styled.span`
-    font-size: 1.9rem;
+    font-size: 1.7rem;
     padding: 10px;
     border-radius: 20px;
-    font-weight: bold;
-    background-color: #222;
+    background-color: ${primary};
     color: #fff;
 `;
 
