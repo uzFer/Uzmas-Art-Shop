@@ -2,6 +2,7 @@ import Box from "@/components/Box";
 import Button from "@/components/Button";
 import { CartContext } from "@/components/CartContext";
 import Center from "@/components/Center";
+import { FavouritesContext } from "@/components/FavouritesContext";
 import Header from "@/components/Header";
 import ProductImages from "@/components/ProductImages";
 import mongooseConnect from "@/lib/mongoose";
@@ -73,10 +74,12 @@ const TagTitle = styled.span`
 
 export default function ProductPage({product, categories, allProducts}) {
     const {addProduct} = useContext(CartContext);
+    const {addFavourite} = useContext(FavouritesContext);
 
     useEffect(() => {
 
-    }, [product])
+    }, [product]);
+
     return (
         <Wrapper>
             <Header products={allProducts}/>
@@ -111,6 +114,7 @@ export default function ProductPage({product, categories, allProducts}) {
                                 </Button>
                             </div>
                         </PriceRow>
+                        <Button primary onClick={() => addFavourite(product._id)}>Add to favourites</Button>
                     </div>
                 </ColWrapper>
             </Center>

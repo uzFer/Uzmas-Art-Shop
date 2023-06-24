@@ -19,7 +19,7 @@ export function CartContextProvider({children}) {
   }, []);
 
   function addProduct(productId) {
-    setCartProducts(prev => [...prev,productId]);
+    setCartProducts(prev => [...prev, productId]);
   }
 
   function removeProduct(productId) {

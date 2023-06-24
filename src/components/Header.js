@@ -101,13 +101,14 @@ const Searchbar = styled.input`
     margin-right: 10px;
     font-family: inherit;
     box-sizing: border-box;
+    border: none;
 `;
 
 const SuggestionWrapper = styled.div`
     flex-direction: column;
     position: absolute;
     overflow-x: hidden;
-    padding: 0 5px;
+    padding: 2px 2px;
 `;
 
 const Suggestion = styled(Link)`
@@ -120,7 +121,7 @@ const Suggestion = styled(Link)`
     background-color: white;
     text-decoration: none;
     color: #000;
-    padding: 10px 0 10px 2px;
+    padding: 10px 0 10px 4px;
     &:hover {
         background-color: #ccc;
         cursor: pointer;
@@ -152,6 +153,7 @@ export default function Header({products}) {
                         </svg>
                         Uzma&apos;s Art Shop
                     </Logo>
+
                     <StyledNav showMobileNav={showMobileNav}>
                         <NavLink href={'/'}>Home</NavLink>
                         <NavLink href={'/products'}>Paintings</NavLink>
@@ -162,12 +164,12 @@ export default function Header({products}) {
                             <SearchWrapper>
                                 <Searchbar 
                                     type="text" 
-                                    onBlur={() => setShowSuggestions(false)}
                                     onFocus={() => setShowSuggestions(true)}
-                                    placeholder="Search..."
+                                    placeholder="Search"
                                     value={searchEntry}
                                     onChange={(e) => handleChange(e.target.value)}
                                 />
+
                                 <SearchButton
                                     onClick={() => setShowMobileNav(false)} 
                                     url={searchEntry === '' ? '/' : '/search/' + searchEntry} /> 
@@ -177,10 +179,11 @@ export default function Header({products}) {
                             {products?.map(product => (
                                 <>
                                 {searchEntry !== '' && product.name.toLowerCase().includes(searchEntry.toLowerCase()) &&
-                                    <Suggestion 
-                                        onClick={() => setShowMobileNav(false)} 
+                                    <Suggestion
+                                        href={'/product/' + product._id}
+                                        onClick={() => {setShowMobileNav(false), setShowSuggestions(false)}} 
                                         show={showSuggestions}
-                                        href={'/product/' + product._id}>
+                                        >
                                         {product.name}
                                     </Suggestion>
                                 }
