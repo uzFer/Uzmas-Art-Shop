@@ -176,19 +176,19 @@ export default function Header({products}) {
                             </SearchWrapper>
                             
                             <SuggestionWrapper>
-                            {products?.map(product => (
-                                <>
-                                {searchEntry !== '' && product.name.toLowerCase().includes(searchEntry.toLowerCase()) &&
-                                    <Suggestion
-                                        href={'/product/' + product._id}
-                                        onClick={() => {setShowMobileNav(false), setShowSuggestions(false)}} 
-                                        show={showSuggestions}
-                                        >
-                                        {product.name}
-                                    </Suggestion>
-                                }
-                                </>
-                            ))}
+                                {products?.map(product => (
+                                    <>
+                                    {searchEntry !== '' && product.name.toLowerCase().includes(searchEntry.toLowerCase()) &&
+                                        <Suggestion
+                                            href={'/product/' + product._id}
+                                            onClick={() => {setShowMobileNav(false), setShowSuggestions(false)}} 
+                                            show={showSuggestions}
+                                            >
+                                            {product.name}
+                                        </Suggestion>
+                                    }
+                                    </>
+                                ))}
                             </SuggestionWrapper>
                         </div>
                     </StyledNav> 
