@@ -11,6 +11,8 @@ import { Product } from "@/models/Product";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const ColWrapper = styled.div`
     gap: 40px;
@@ -46,13 +48,29 @@ const ProductImageBox = styled.div`
     }
 `;
 
+const Container = styled.div`
+    background-color: #222;
+    color: #fff;
+    margin: 20px 0;
+    padding: 10px 0 20px 0;
+    text-align: center;
+    border-radius: 10px;
+`;
+
 
 export default function AccountPage({allProducts, orders}) {
     const {favourites, removeFavourite} = useContext(FavouritesContext);
     const [favProducts, setFavProducts] = useState([]);
+    const { data: session } = useSession();
+    const router = useRouter();
 
     function removeFav(id) {
         removeFavourite(id);
+    }
+
+    async function logOut() {
+        await router.push('../');
+        await signOut();
     }
 
     useEffect(() => {
@@ -66,15 +84,21 @@ export default function AccountPage({allProducts, orders}) {
         }
     }, [favourites]); 
 
-    return (
-        <>
+    if(session) {
+        return (
+        <div>
             <Header products={allProducts} />
             <Center>
+                <Container>
+                    <p>Signed in as {session.user.email} </p>
+                    <Button primary outline onClick={logOut}>Sign out</Button>
+                </Container>
+
                 <ColWrapper>
                     <Box>
                         <h1>Your favourites</h1>
                         {!favourites?.length &&
-                            <div>Your cart is empty.</div>
+                            <div>No favourites yet!</div>
                         }
                         {favProducts?.length > 0 && (
                             <Table>
@@ -111,19 +135,75 @@ export default function AccountPage({allProducts, orders}) {
                         )}
                     </Box>
                 </ColWrapper>
-            <Title props={'Buy it again'} />
-            {orders?.length > 0 && orders.map(order => (
-                <>
-                <p>{(new Date(order.createdAt)).toLocaleString()}</p>
-                {order.line_items.map(l => (
-                    <>
-                        {l.price_data?.product_data.name} x {l.quantity} <br />
-                    </>
-                ))}
-                </>
-            ))}
+                <Title props={'Buy it again'} />
+                <Box>
+                    {orders?.map(order => (
+                        <div key={order}>
+                            {order.email === session.user.email && order.line_items.map(l => (
+                                <div key={l}>
+                                    {l.price_data?.product_data.name} x {l.quantity} <br />
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </Box>
             </Center> 
-        </>
+        </div>
+        );
+    }
+    
+    return (
+        <div>
+            <Header products={allProducts} />
+            <Center>
+                <Container>
+                    <h2>Sign in to save your info</h2>
+                    <Button primary outline onClick={() => signIn()}>Sign in</Button>
+                </Container>
+
+                <ColWrapper>
+                    <Box>
+                        <h1>Your favourites</h1>
+                        {!favourites?.length &&
+                            <div>No favourites yet!</div>
+                        }
+                        {favProducts?.length > 0 && (
+                            <Table>
+                                <thead>
+                                </thead>
+                                <tbody>
+                                    {favProducts.map(product => (
+                                        <tr key={product}>
+                                            <ProductInfoBox>
+                                                <ProductImageBox>
+                                                    <img src={product.images[0]}></img>
+                                                </ProductImageBox>
+                                                {product.name}
+                                            </ProductInfoBox>  
+                                            <td>
+                                                ${product.price.toFixed(2)}
+                                            </td>
+                                            <td>
+                                                <Button 
+                                                    black outline 
+                                                    onClick={() => removeFav(product._id)}>
+                                                    Remove Favourite
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </Table>
+                        )}
+                    </Box>
+                </ColWrapper>
+            </Center> 
+        </div>
     );
 }
 

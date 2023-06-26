@@ -175,11 +175,11 @@ export default function CartPage({allProducts}) {
                                             </ProductInfoBox>  
                                             <td>
                                                 <QuantityWrapper>
-                                                    <Button  onClick={() => decreaseProduct(product._id)}>-</Button>
+                                                    <Button  onClick={() => increaseProduct(product._id)}>+</Button>
                                                     <QuantityLabel>
                                                         {cartProducts.filter(id => id === product._id).length}
                                                     </QuantityLabel>
-                                                    <Button onClick={() => increaseProduct(product._id)}>+</Button>
+                                                    <Button onClick={() => decreaseProduct(product._id)}>-</Button>
                                                 </QuantityWrapper>
                                             </td>
                                             <td>

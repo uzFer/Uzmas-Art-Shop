@@ -9,8 +9,6 @@ const Wrapper = styled.div`
         fill: red;
         &:hover {
             transform: scale(1.2, 1.2);
-            fill: transparent;
-            color: red;
             cursor: pointer;
         } 
     }

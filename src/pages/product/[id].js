@@ -5,12 +5,14 @@ import Center from "@/components/Center";
 import { FavouritesContext } from "@/components/FavouritesContext";
 import Header from "@/components/Header";
 import ProductImages from "@/components/ProductImages";
+import FilledHeartIcon from "@/components/icons/FilledHeartIcon";
+import HeartIcon from "@/components/icons/HeartIcon";
 import mongooseConnect from "@/lib/mongoose";
 import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import { useContext, useEffect } from "react";
 import { css, styled } from "styled-components";
-
+ 
 const ColWrapper = styled.div` 
     display: grid;
     grid-template-columns: 1fr;
@@ -72,13 +74,19 @@ const TagTitle = styled.span`
     padding: 5px 10px;
 `;
 
+const Heart = styled.div`
+    position: absolute;
+`;
+
+
 export default function ProductPage({product, categories, allProducts}) {
     const {addProduct} = useContext(CartContext);
-    const {addFavourite} = useContext(FavouritesContext);
+    const {favourites, addFavourite, removeFavourite} = useContext(FavouritesContext);
 
     useEffect(() => {
 
     }, [product]);
+
 
     return (
         <Wrapper>
@@ -114,7 +122,13 @@ export default function ProductPage({product, categories, allProducts}) {
                                 </Button>
                             </div>
                         </PriceRow>
-                        <Button primary onClick={() => addFavourite(product._id)}>Add to favourites</Button>
+                        <Heart onClick={() => {
+                            favourites?.includes(product._id) ? removeFavourite(product._id) : addFavourite(product._id)
+                        }}>
+                        {favourites?.length > 0 && favourites.includes(product._id) ? 
+                            <FilledHeartIcon /> : <HeartIcon props={'black'} />
+                        }
+                    </Heart> 
                     </div>
                 </ColWrapper>
             </Center>
@@ -125,7 +139,6 @@ export default function ProductPage({product, categories, allProducts}) {
 export async function getServerSideProps(context) {
     await mongooseConnect();
     const {id} = context.query;
-    console.log(context)
     const product = await Product.findById(id);
     const products = await Product.find({}, null, {sort:{'_id': -1}});
     const categories = await Category.find({}, null, {sort:{'_id': -1}});

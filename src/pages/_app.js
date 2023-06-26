@@ -1,10 +1,9 @@
 import { CartContextProvider } from "@/components/CartContext";
 import { FavouritesContextProvider } from "@/components/FavouritesContext";
 import { createGlobalStyle } from "styled-components"
+import { SessionProvider } from "next-auth/react"
 
-const GlobalStyles = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Poppins&family=Quicksand&display=swap');
-  
+const GlobalStyles = createGlobalStyle`  
   body {
     background-color: #eee;
     padding: 0;
@@ -18,12 +17,13 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
   return (
     <>
       <GlobalStyles />
-      <CartContextProvider>
-        <FavouritesContextProvider>
-          <Component {...pageProps}/>
-        </FavouritesContextProvider>
-      </CartContextProvider>
+      <SessionProvider session={session}>
+        <CartContextProvider>
+          <FavouritesContextProvider>
+            <Component {...pageProps}/>
+          </FavouritesContextProvider>
+        </CartContextProvider>
+      </SessionProvider>
     </>
   )
 }
- 

@@ -1,4 +1,4 @@
-import { green, primary } from "@/lib/colours";
+import { green, highlight, primary } from "@/lib/colours";
 import styled, {css} from "styled-components";
 
 export const ButtonStyle = css`
@@ -34,6 +34,14 @@ export const ButtonStyle = css`
     color: #fff;
     &:hover {
       background-color: transparent;
+    }
+  `}
+  ${props => props.primary && props.outline && css`
+    background-color: ${primary}; 
+    border: 1px solid ${primary};
+    color: #fff;
+    &:hover {
+      background-color: ${highlight};
     }
   `}
   ${props => props.black && props.outline && css`
