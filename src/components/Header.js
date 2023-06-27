@@ -61,7 +61,7 @@ const StyledNav = styled.nav`
         position: static;
         align-items: center;
         padding: 0;
-        gap: 15px;
+        gap: 20px;
     }
 `;
 

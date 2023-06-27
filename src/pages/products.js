@@ -82,7 +82,7 @@ export default function ProductsPage({products}) {
             <Header products={products} />
             <Center>
                 <Wrapper>
-                    <Title props={'All Products'} />
+                    <Title props={'All Paintings'} />
                     { /* <select style={dropdownStyle} name="dropdown" onChange={e => changeFilter(e.target.value)}>
                         <option value="">Sort by</option>
                         <option value="abstract">Show abstract only</option>
