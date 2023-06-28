@@ -1,9 +1,11 @@
 const { Schema, model, models } = require("mongoose");
 
 const ReviewSchema = new Schema({
-    name: String,
+    productID: String,
+    name: {type: String, required: true}, 
     email: String,
-    comment: String,
+    comment: {type: String, required: true}, 
+    image: {type: String},
 }, {
     timestamps: true,
 });

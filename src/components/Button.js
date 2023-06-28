@@ -54,7 +54,7 @@ export const ButtonStyle = css`
   `}
   ${props => props.black && props.outline && css`
     background-color: #222;
-    border: 1px solid #fff;
+    border: 1px solid #222;
     color: #fff;
     font-weight: bold;
     &:hover {

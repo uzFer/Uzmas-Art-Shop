@@ -16,7 +16,7 @@ const ProductWrapper = styled.div`
 const WhiteBox = styled.div`
     background-color: #eee;
     padding: 15px;
-    height: 250px;
+    height: 350px;  
     text-align: center;
     display: flex;
     align-items: center;
@@ -91,7 +91,7 @@ export default function ProductBox({_id, name, description, price, images}) {
 
     async function addFav(name, email, description, price, images) {
         const data = {
-            _id, name, email, description, price, images,
+            productID: _id, name, email, description, price, images,
         };
         await axios.post('/api/userfavourites', data);
     }
@@ -136,7 +136,7 @@ export default function ProductBox({_id, name, description, price, images}) {
                     <>
                         {favProducts?.length > 0 && favProducts.map(fav => (
                         <>
-                            {fav._id !== _id &&
+                            {fav.productID !== _id &&
                                 <Heart onClick={() => {addFav(name, session.user.email, description, price, images)}}>   
                                     <HeartIcon /> 
                                 </Heart>
@@ -145,7 +145,7 @@ export default function ProductBox({_id, name, description, price, images}) {
                         ))}
                         {favProducts?.length > 0 && favProducts.map(fav => (
                         <>
-                            {fav._id === _id && fav.email === session.user.email &&
+                            {fav.productID === _id && fav.email === session.user.email &&
                                 <Heart onClick={() => {removeFav(fav._id)}}>   
                                     <FilledHeartIcon /> 
                                 </Heart>

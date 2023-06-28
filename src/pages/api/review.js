@@ -6,24 +6,25 @@ export default async function handler(req, res) {
     await mongooseConnect();
     
     if(method === 'GET') {
-        if(req.query?.id) {
-            res.json(await Review.findOne({_id: req.query.id}));
-        }
+        if(req.query?.productID) {
+            res.json(await Review.find({productID: req.query.productID}));
+        } 
         else {
             res.json(await Review.find());
         }
     }
 
     if(method === 'POST') {
-        const {name, email, comment} = req.body;
+        const {productID, name, email, comment, image} = req.body;
         const reviewDoc = await Review.create({
-            name, email, comment,
+            productID, name, email, comment, image
         });
         res.json(reviewDoc);
     }
 
     if(method === 'PUT') {
-        const {name, email, comment, _id,} = req.body;
+        console.log(req.body)
+        const {name, email, comment, _id} = req.body;
         await Review.updateOne({_id}, {
             name, email, comment,
         });
@@ -31,8 +32,9 @@ export default async function handler(req, res) {
     }
 
     if(method === 'DELETE') {
-        if(req.query?.id) { 
-            await Review.deleteOne({_id: req.query?.id});
+        console.log(req.query)
+        if(req.query?._id) { 
+            await Review.deleteOne({_id: req.query?._id});
         }
         res.json(true);
     }

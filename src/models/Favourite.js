@@ -1,7 +1,7 @@
 import { Schema, model, models } from "mongoose";
 
 const FavouriteSchema = new Schema({
-    id: String,
+    productID: String,
     name: {type: String, required: true}, 
     email: String,
     description: String,

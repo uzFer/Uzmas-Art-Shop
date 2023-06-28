@@ -15,10 +15,9 @@ export default async function handle(req, res) {
     }
 
     if(method === 'POST') {
-        console.log(req.body)
-        const {_id, name, email, description, price, images} = req.body;
+        const {productID, name, email, description, price, images} = req.body;
         const favouriteDoc = await Favourite.create({
-            _id, name, email, description, price, images,
+            productID, name, email, description, price, images,
         });
         res.json(favouriteDoc);
     }

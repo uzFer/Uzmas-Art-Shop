@@ -129,12 +129,13 @@ export default function AccountPage({allProducts, orders}) {
                                 <tbody>
                                     {favProducts.map(product => (
                                         <tr key={product}>
-                                            <ProductInfoBox href={'/product/' + product._id}>
+                                            <ProductInfoBox href={session ? '/product/' + product.productID : '/product/' + product._id}>
                                                 <ProductImageBox>
                                                     <img src={product.images[0]}></img>
-                                                </ProductImageBox>
+                                                </ProductImageBox>   
                                                 {product.name}
                                             </ProductInfoBox>  
+                                            
                                             <td>
                                                 ${product.price.toFixed(2)}
                                             </td>
