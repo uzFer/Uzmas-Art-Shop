@@ -13,20 +13,23 @@ import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const ColWrapper = styled.div`
     gap: 40px;
     margin-top: 40px;
 `;
 
-const ProductInfoBox = styled.td`
-    padding: 10px 0;
+const ProductInfoBox = styled(Link)`
+    text-decoration: none;
+    color: #000;
 `;
 
 const ProductImageBox = styled.div`
     width: 100%;
     height: 100%;
     padding: 2px;
+    margin: 10px 0;
     background-color: #fff;
     border-radius: 10px;
     display: flex;
@@ -64,8 +67,13 @@ export default function AccountPage({allProducts, orders}) {
     const { data: session } = useSession();
     const router = useRouter();
 
-    function removeFav(id) {
-        removeFavourite(id);
+    async function removeFav(id) {
+        if(!session) {
+            removeFavourite(id);
+        }
+        else {
+            await axios.delete('/api/userfavourites?_id=' + id); 
+        }
     }
 
     async function logOut() {
@@ -74,15 +82,26 @@ export default function AccountPage({allProducts, orders}) {
     }
 
     useEffect(() => {
-        if(favourites.length > 0) {
-            axios.post('/api/favourites', {ids: favourites}).then(response => {
-                setFavProducts(response.data);
-            })
-        }
-        else {
-            setFavProducts([]);
+        if(!session) {
+            if(favourites.length > 0) {
+                axios.post('/api/favourites', {ids: favourites}).then(response => {
+                    setFavProducts(response.data);
+                })
+            }
+            else {
+                setFavProducts([]);
+            }
         }
     }, [favourites]); 
+
+
+    useEffect(() => {
+        if(session) {
+            axios.get('/api/userfavourites').then(response => {
+                setFavProducts(response.data);
+            });
+        }
+    }, [favProducts]);
 
     if(session) {
         return (
@@ -97,7 +116,10 @@ export default function AccountPage({allProducts, orders}) {
                 <ColWrapper>
                     <Box>
                         <h1>Your favourites</h1>
-                        {!favourites?.length &&
+                        {!favourites?.length && !session &&
+                            <div>No favourites yet!</div>
+                        }
+                        {!favProducts?.length && session &&
                             <div>No favourites yet!</div>
                         }
                         {favProducts?.length > 0 && (
@@ -107,7 +129,7 @@ export default function AccountPage({allProducts, orders}) {
                                 <tbody>
                                     {favProducts.map(product => (
                                         <tr key={product}>
-                                            <ProductInfoBox>
+                                            <ProductInfoBox href={'/product/' + product._id}>
                                                 <ProductImageBox>
                                                     <img src={product.images[0]}></img>
                                                 </ProductImageBox>
@@ -135,13 +157,13 @@ export default function AccountPage({allProducts, orders}) {
                         )}
                     </Box>
                 </ColWrapper>
-                <Title props={'Buy it again'} />
+                <Title props={'Buy it again!'} />
                 <Box>
                     {orders?.map(order => (
                         <div key={order}>
                             {order.email === session.user.email && order.line_items.map(l => (
-                                <div key={l}>
-                                    {l.price_data?.product_data.name} x {l.quantity} <br />
+                                <div key={l} >
+                                    {l.price_data?.product_data.name} x {l.quantity} {(new Date(order.createdAt)).toLocaleString()} <hr />
                                 </div>
                             ))}
                         </div>
@@ -174,7 +196,7 @@ export default function AccountPage({allProducts, orders}) {
                                 <tbody>
                                     {favProducts.map(product => (
                                         <tr key={product}>
-                                            <ProductInfoBox>
+                                            <ProductInfoBox href={'/product/' + product._id}>
                                                 <ProductImageBox>
                                                     <img src={product.images[0]}></img>
                                                 </ProductImageBox>

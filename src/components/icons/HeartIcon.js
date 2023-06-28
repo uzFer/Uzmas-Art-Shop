@@ -5,7 +5,7 @@ const Wrapper = styled.div`
         height: 25px;
         padding: 8px;
         transition: all 0.1s ease-in-out;
-        color: white;
+        color: #fff;
         fill: transparent;
         &:hover {
             transform: scale(1.2, 1.2);

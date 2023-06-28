@@ -1,6 +1,5 @@
 import { styled } from "styled-components";
 import Button from "./Button";
-import CartIcon from "./icons/CartIcon";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
@@ -8,6 +7,7 @@ import HeartIcon from "./icons/HeartIcon";
 import { FavouritesContext } from "./FavouritesContext";
 import axios from "axios";
 import FilledHeartIcon from "./icons/FilledHeartIcon";
+import { useSession } from "next-auth/react";
 
 const ProductWrapper = styled.div`
 
@@ -81,32 +81,87 @@ const ImageWrapper = styled.div`
 export default function ProductBox({_id, name, description, price, images}) {
     const {addProduct} = useContext(CartContext);
     const {favourites, addFavourite, removeFavourite} = useContext(FavouritesContext);
+    const [favProducts, setFavProducts] = useState([]);
     const url = '/product/' + _id;
-    const [products, setProducts] = useState([]);
+    const { data: session } = useSession();
 
-    useEffect(() => {
-        if(favourites.length > 0) {
-            axios.post('/api/favourites', {ids: favourites}).then(response => {
-                setProducts(response.data);
-            })
-        }
-        else {
-            setProducts([]);
+    async function removeFav(id) {
+        await axios.delete('/api/userfavourites?_id=' + id); 
+    }
+
+    async function addFav(name, email, description, price, images) {
+        const data = {
+            _id, name, email, description, price, images,
+        };
+        await axios.post('/api/userfavourites', data);
+    }
+
+    useEffect(() => {   
+        if(!session) {
+            if(favourites.length > 0) {
+                axios.post('/api/favourites', {ids: favourites}).then(response => {
+                    setFavProducts(response.data);
+                })
+            }
+            else {
+                setFavProducts([]);
+            }
         }
     }, [favourites]); 
+
+
+    useEffect(() => {
+        if(session) {
+            axios.get('/api/userfavourites').then(response => {
+                setFavProducts(response.data);
+            });
+        }
+    }, [favProducts]);
+
 
     return (
         <ProductWrapper> 
             <WhiteBox> 
                 <ImageWrapper>
-                    <Heart onClick={() => {
-                        favourites?.includes(_id) ? removeFavourite(_id) : addFavourite(_id)
-                    }}>
-                        {favourites?.length > 0 && favourites.includes(_id) ? 
-                            <FilledHeartIcon /> : <HeartIcon />
+                    {!session &&
+                        <Heart onClick={() => {
+                            favourites?.includes(_id) ? removeFavourite(_id) : addFavourite(_id)
+                        }}>
+                            {favourites?.length > 0 && favourites.includes(_id) ? 
+                                <FilledHeartIcon /> : <HeartIcon />
+                            }
+                        </Heart>
+                    }
+                    {session &&
+                    <>
+                        {favProducts?.length > 0 && favProducts.map(fav => (
+                        <>
+                            {fav._id !== _id &&
+                                <Heart onClick={() => {addFav(name, session.user.email, description, price, images)}}>   
+                                    <HeartIcon /> 
+                                </Heart>
+                            }
+                        </>
+                        ))}
+                        {favProducts?.length > 0 && favProducts.map(fav => (
+                        <>
+                            {fav._id === _id && fav.email === session.user.email &&
+                                <Heart onClick={() => {removeFav(fav._id)}}>   
+                                    <FilledHeartIcon /> 
+                                </Heart>
+                            }
+                        </>
+                        ))}
+                        {favProducts?.length === 0 && 
+                            <Heart 
+                                onClick={() => {
+                                addFav(name, session.user.email, description, price, images)
+                            }}>
+                                <HeartIcon />
+                            </Heart>
                         }
-                    </Heart>
-
+                    </>
+                    }
                     <Link href={url}>
                         <img src={images?.[0]} alt={name} />
                     </Link>

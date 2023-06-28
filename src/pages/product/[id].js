@@ -10,9 +10,11 @@ import HeartIcon from "@/components/icons/HeartIcon";
 import mongooseConnect from "@/lib/mongoose";
 import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { css, styled } from "styled-components";
- 
+import { useSession } from "next-auth/react";
+import axios from "axios";
+
 const ColWrapper = styled.div` 
     display: grid;
     grid-template-columns: 1fr;
@@ -32,16 +34,6 @@ const Wrapper = styled.div`
 
 const ProductInfo = styled.div`
     margin-bottom: 30px;
-`;
-
-const PriceRow = styled.div`
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    justify-content: center;
-    @media screen and (min-width: 768px) {
-        justify-content: left;
-    }
 `;
 
 const Price = styled.span`
@@ -74,19 +66,65 @@ const TagTitle = styled.span`
     padding: 5px 10px;
 `;
 
-const Heart = styled.div`
+const Heart = styled.div`  
     position: absolute;
+`;
+
+const PriceWrapper = styled.div` 
+    margin: 40px 0;
+`;
+
+const ReviewWrapper = styled.div` 
+    display: flex;
+    margin-top: 40px;
+    padding: 10px;
+    @media screen and (min-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+    }
 `;
 
 
 export default function ProductPage({product, categories, allProducts}) {
     const {addProduct} = useContext(CartContext);
     const {favourites, addFavourite, removeFavourite} = useContext(FavouritesContext);
+    const [favProducts, setFavProducts] = useState([]);
+    const { data: session } = useSession();
+
+    /* USER FAVOURITES */
+    async function removeFav(id) {
+        await axios.delete('/api/userfavourites?_id=' + id); 
+    }
+
+    async function addFav(name, email, description, price, images) {
+        const _id = product._id;
+        const data = {
+            _id, name, email, description, price, images
+        };
+        await axios.post('/api/userfavourites', data);
+    }
+
+    /* NON USER FAVOURITES */
+    useEffect(() => {
+        if(!session) {
+            if(favourites.length > 0) {
+                axios.post('/api/favourites', {ids: favourites}).then(response => {
+                    setFavProducts(response.data);
+                })
+            }
+            else {
+                setFavProducts([]);
+            }
+        }
+    }, [favourites]); 
 
     useEffect(() => {
-
-    }, [product]);
-
+        if(session) {
+            axios.get('/api/userfavourites').then(response => {
+                setFavProducts(response.data);
+            });
+        }
+    }, [favProducts]);
+    
 
     return (
         <Wrapper>
@@ -110,27 +148,71 @@ export default function ProductPage({product, categories, allProducts}) {
                             }
                             </>
                         ))}
-                        <PriceRow>
-                            <div>
-                                <Price>
-                                    ${product.price}
-                                </Price>
-                            </div>
-                            <div>
-                                <Button black outline onClick={() => addProduct(product._id)}>
-                                    Add to cart
-                                </Button>
-                            </div>
-                        </PriceRow>
-                        <Heart onClick={() => {
-                            favourites?.includes(product._id) ? removeFavourite(product._id) : addFavourite(product._id)
-                        }}>
-                        {favourites?.length > 0 && favourites.includes(product._id) ? 
-                            <FilledHeartIcon /> : <HeartIcon props={'black'} />
+                        <PriceWrapper>
+                            <Price>
+                                ${product.price}
+                            </Price>
+                        </PriceWrapper>
+                        <div style={{marginBottom: '10px'}}>
+                            <Button black outline onClick={() => addProduct(product._id)}>
+                                Add to cart
+                            </Button>
+                        </div>
+
+                        <div>
+                        {!session &&
+                            <Heart onClick={() => {
+                                favourites?.includes(product._id) ? 
+                                removeFavourite(product._id) : 
+                                addFavourite(product._id)
+                            }}>
+                            {favourites?.length > 0 && favourites.includes(product._id) ? 
+                                <Button red outline>Favourited &lt;3</Button> : 
+                                <Button red outline>Add to fav &lt;3</Button>
+                            }
+                            </Heart> 
                         }
-                    </Heart> 
+                        
+                        {session &&
+                            <>
+                                {favProducts?.length > 0 && favProducts.map(fav => (
+                                <>
+                                    {fav._id !== product._id &&
+                                        <Heart onClick={() => {
+                                            addFav(product.name, session.user.email, product.description, product.price, product.images)
+                                            }}>   
+                                            <Button red outline>Add to fav &lt;3</Button>  
+                                        </Heart>
+                                    }
+                                </>
+                                ))}
+                                {favProducts?.length > 0 && favProducts.map(fav => (
+                                <>
+                                    {fav._id === product._id && fav.email === session.user.email &&
+                                        <Heart onClick={() => {removeFav(fav._id)}}>   
+                                            <Button red outline>Favourited &lt;3</Button>  
+                                        </Heart>
+                                    }
+                                </>
+                                ))}
+                                {favProducts?.length === 0 &&
+                                    <Heart onClick={() => {
+                                        addFav(product.name, session.user.email, product.description, product.price, product.images)
+                                        }}>   
+                                        <Button red outline>Add to fav &lt;3</Button>  
+                                    </Heart>
+                                }
+                            </>
+                        }
+                        </div>
                     </div>
                 </ColWrapper>
+                <ReviewWrapper>
+                    <h2>Reviews</h2>
+                    {session &&
+                        <input type="text" placeholder="Leave a review" />
+                    }
+                </ReviewWrapper>
             </Center>
         </Wrapper>
     );
