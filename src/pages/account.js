@@ -4,7 +4,6 @@ import Center from "@/components/Center";
 import { FavouritesContext } from "@/components/FavouritesContext";
 import Header from "@/components/Header";
 import Table from "@/components/Table";
-import Title from "@/components/Title";
 import mongooseConnect from "@/lib/mongoose";
 import { Order } from "@/models/Order";
 import { Product } from "@/models/Product";
@@ -15,6 +14,24 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import ReactLoading from "react-loading";
+import React from 'react';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { primary } from "@/lib/colours";
+
+const TitleWrapper = styled.h2`
+    padding: 10px;
+    margin: 50px 0 20px;
+    text-align: center;
+`;
+
+const TitleText = styled.span`
+    font-size: 1.7rem;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: ${primary};
+    color: #fff;
+`;
 
 const LoadingWrapper = styled.div`
     height: 100vh;
@@ -28,9 +45,17 @@ const ColWrapper = styled.div`
     margin-top: 40px;
 `;
 
+const TableWrapper = styled.div`
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 60px;
+    max-height: 100%;
+`;
+
 const ProductInfoBox = styled(Link)`
     text-decoration: none;
     color: #000;
+    padding: 12px;
 `;
 
 const ProductImageBox = styled.div`
@@ -66,6 +91,23 @@ const Container = styled.div`
     padding: 10px 0 20px 0;
     text-align: center;
     border-radius: 10px;
+`;
+
+const Wrapper = styled.div`
+    display: flex;
+    justify-content: center;
+`;
+
+const CarouselWrapper = styled.div`
+    padding: 15px;
+    height: 320px;  
+    width: 350px;
+    background-color: #fff;
+    border-radius: 15px;
+    img {
+        max-width: 250px;
+        max-height: 100%;
+    }
 `;
 
 
@@ -139,7 +181,7 @@ export default function AccountPage({allProducts, orders}) {
                 </Container>
 
                 <ColWrapper>
-                    <Box>
+                    <TableWrapper>
                         <h1>Your favourites</h1>
                         {!favourites?.length && !session &&
                             <div>No favourites yet!</div>
@@ -154,13 +196,15 @@ export default function AccountPage({allProducts, orders}) {
                                 <tbody>
                                     {favProducts.map(product => (
                                         <tr key={product}>
+                                            <td>
                                             <ProductInfoBox href={session ? '/product/' + product.productID : '/product/' + product._id}>
                                                 <ProductImageBox>
                                                     <img src={product.images[0]}></img>
                                                 </ProductImageBox>   
                                                 {product.name}
                                             </ProductInfoBox>  
-                                            
+                                            </td>
+
                                             <td>
                                                 ${product.price.toFixed(2)}
                                             </td>
@@ -181,20 +225,35 @@ export default function AccountPage({allProducts, orders}) {
                                 </tbody>
                             </Table>
                         )}
-                    </Box>
+                    </TableWrapper>
                 </ColWrapper>
-                <Title props={'Buy it again!'} />
-                <Box>
-                    {orders?.map(order => (
-                        <div key={order}>
-                            {order.email === session.user.email && order.line_items.map(l => (
-                                <div key={l} >
-                                    {l.price_data?.product_data.name} x {l.quantity} {(new Date(order.createdAt)).toLocaleString()} <hr />
-                                </div>
-                            ))}
-                        </div>
-                    ))}
-                </Box>
+
+                <TitleWrapper>
+                    <TitleText>Buy it again!</TitleText>
+                </TitleWrapper>
+              
+                    <Wrapper>
+                        <CarouselWrapper>
+                            <Carousel>
+                                {orders?.map(order => (
+                                    <div key={order}>
+                                        {order.email === session.user.email && order.line_items[0].price_data.product_data.images.map(l => (
+                                        <>
+                                            <div key={l}>
+                                                <img src={l} /> 
+                                                <p className="legend">
+                                                    {order.line_items[0].price_data.product_data.name} on {(new Date(order.createdAt)).toDateString()}
+                                                </p>
+                                            </div>
+                                        </>
+                                        ))}
+                                    </div>
+                                ))}  
+                            </Carousel>
+                        </CarouselWrapper>
+                    </Wrapper>
+                
+                
             </Center> 
         </div>
         );
@@ -244,7 +303,6 @@ export default function AccountPage({allProducts, orders}) {
                                         <td></td>
                                         <td></td>
                                     </tr>
-                                    
                                 </tbody>
                             </Table>
                         )}

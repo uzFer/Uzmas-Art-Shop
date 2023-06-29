@@ -10,7 +10,7 @@ import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import { useContext, useEffect, useState } from "react";
 import { css, styled } from "styled-components";
-import { useSession } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import axios from "axios";
 import StarIcon from "@/components/icons/StarIcon";
 import TrashIcon from "@/components/icons/TrashIcon";
@@ -194,6 +194,15 @@ const EditWrapper = styled.div`
 
 `;
 
+const Container = styled.div`
+    background-color: #fff;
+    box-shadow: 0px 6px 4px 0 rgba(0, 0, 0, 0.2), 0px 6px 6px 0 rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    padding: 10px 0 20px 0;
+    text-align: center;
+    border-radius: 10px;
+`;
+
 
 export default function ProductPage({product, categories, allProducts}) {
     const {addProduct} = useContext(CartContext);
@@ -206,12 +215,12 @@ export default function ProductPage({product, categories, allProducts}) {
     const [editedComment, setEditedComment] = useState('');
     const [editedID, setEditedID] = useState('');
     const [starsPressed, setStarsPressed] = useState([false, false, false, false, false]);
-    const [numOfStars, setNumOfStars] = useState(0);
+    const [numOfStars, setNumOfStars] = useState(-1);
     const [editStarsPressed, setEditStarsPressed] = useState([false, false, false, false, false]);
     const [loading, setLoading] = useState(true);
 
     async function addReview() {
-        if(comment === '' || numOfStars === 0) {
+        if(comment === '' || numOfStars === -1) {
             return;
         }
         const productID = product._id;
@@ -221,7 +230,7 @@ export default function ProductPage({product, categories, allProducts}) {
         await axios.post('/api/review', { productID, name, email, comment, image, numOfStars });
         fetchReviews();
         setComment('');
-        setNumOfStars(0);
+        setNumOfStars(-1);
         setStarsPressed([false, false, false, false, false]);
     }
 
@@ -413,6 +422,12 @@ export default function ProductPage({product, categories, allProducts}) {
                     <ReviewTitle>Reviews</ReviewTitle>
                 </TitleWrapper>
                 <ReviewList>
+                    {!session &&
+                        <Container>
+                            <h3>Sign in to leave a review!</h3>
+                            <Button primary outline onClick={() => signIn()}>Sign in</Button>
+                        </Container>
+                    }
                     {session &&
                     <>  
                         <StarWrapper>
@@ -509,11 +524,11 @@ export default function ProductPage({product, categories, allProducts}) {
                                 {editing && editedID !== review._id &&
                                     <>
                                     <StarWrapper>
-                                        {review.numOfStars === 0 && <FilledStarIcon />}
-                                        {review.numOfStars === 1 && <> <FilledStarIcon /> <FilledStarIcon /> </>}
-                                        {review.numOfStars === 2 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> </>}
-                                        {review.numOfStars === 3 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /></>}
-                                        {review.numOfStars === 4 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /></>}
+                                        {review.numOfStars === 1 && <FilledStarIcon />}
+                                        {review.numOfStars === 2 && <> <FilledStarIcon /> <FilledStarIcon /> </>}
+                                        {review.numOfStars === 3 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> </>}
+                                        {review.numOfStars === 4 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /></>}
+                                        {review.numOfStars === 5 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /></>}
                                     </StarWrapper> 
                                     <p>{review.comment}</p>  
                                     </> 
@@ -534,7 +549,7 @@ export default function ProductPage({product, categories, allProducts}) {
                         }   
                         </>
                     ))}
-                    {sortedReviews?.length === 0 && 
+                    {sortedReviews?.length === 0 &&
                         <ReviewBox>
                             <p>Be the first to leave a review!</p>
                         </ReviewBox>

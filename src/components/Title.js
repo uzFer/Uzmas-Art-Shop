@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 const TitleWrapper = styled.h2`
     padding: 10px;
     margin: 30px 0 20px;
+    text-align: center;
 `;
 
 const TitleText = styled.span`
