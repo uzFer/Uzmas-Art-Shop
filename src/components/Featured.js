@@ -32,13 +32,13 @@ const ColWrapper = styled.div`
     gap: 40px;
     img {
         max-width: 100%;
-        max-height: 300px;
+        max-height: 375px;
     }
     div:nth-child(1) {
         order: 2;
     }
     @media screen and (min-width: 768px) {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1.3fr 1fr;
         div:nth-child(1) {
             order: 0;
         }

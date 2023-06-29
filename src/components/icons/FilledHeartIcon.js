@@ -2,8 +2,8 @@ import { styled } from "styled-components";
 
 const Wrapper = styled.div`
     svg {
-        height: 25px;
-        padding: 8px;
+        height: 30px;
+        padding: 5px;
         transition: all 0.1s ease-in-out;
         color: red;
         fill: red;

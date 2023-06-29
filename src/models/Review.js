@@ -6,6 +6,7 @@ const ReviewSchema = new Schema({
     email: String,
     comment: {type: String, required: true}, 
     image: {type: String},
+    numOfStars: {type: Number, required: true},
 }, {
     timestamps: true,
 });

@@ -16,6 +16,15 @@ import StarIcon from "@/components/icons/StarIcon";
 import TrashIcon from "@/components/icons/TrashIcon";
 import EditIcon from "@/components/icons/EditIcon";
 import Input from "@/components/Input";
+import FilledStarIcon from "@/components/icons/FilledStarIcon";
+import ReactLoading from "react-loading";
+
+const LoadingWrapper = styled.div`
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
 
 const ColWrapper = styled.div` 
     display: grid;
@@ -73,7 +82,11 @@ const TagTitle = styled.span`
 `;
 
 const Heart = styled.div`  
-    position: absolute;
+    display: none;
+    @media screen and (min-width: 768px) {
+        position: absolute;
+        display: flex;
+    }
 `;
 
 const PriceWrapper = styled.div` 
@@ -85,7 +98,7 @@ const TitleWrapper = styled.div`
 `;
 
 const ReviewTitle = styled.span` 
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: bold;
     padding: 10px;
     border-radius: 20px;
@@ -95,6 +108,7 @@ const ReviewList = styled.div`
     flex-direction: column;
     margin-top: 30px;
     padding: 0;
+    text-align: left;
     textarea {
         width: 100%;
         height: 30px;
@@ -108,9 +122,12 @@ const StarWrapper = styled.div`
     display: flex;
 `;
 
+const TextAreaWrapper = styled.div`
+    margin-right: 30px;
+`;
+
 const StyledInput = styled.textarea`
-    width: 100%;   
-    height: 400px;
+    width: 100%;  
     margin: 5px;
 `;
 
@@ -118,7 +135,10 @@ const ReviewBox = styled.div`
     background-color: #fff;
     margin: 30px 0 0 0;
     padding: 10px 30px;
-    border-radius: 20px;
+    border-radius: 5px;
+    text-align: left;
+    box-shadow: 0px 6px 4px 0 rgba(0, 0, 0, 0.2), 0px 6px 6px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
     img {
         width: 30px;
         height: 30px;
@@ -129,18 +149,32 @@ const ReviewBox = styled.div`
 const ReviewHeader = styled.div`
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     p {
         font-weight: bold;
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
-    svg {
-        float: right;
+    span {
+        display: none;
+    }
+    @media screen and (min-width: 768px) {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        p {
+            font-weight: bold;
+            font-size: 1.15rem;
+        }
+        span {
+            display: block;
+        }
     }
 `;
 
-const ReviewDate = styled.span`
-    color: #555;
+const ReviewDate = styled.div`
+    color: #777;
+    margin-left: 5px;
+    white-space: nowrap;
 `;
 
 const ReviewIconWrapper = styled.div`
@@ -166,23 +200,29 @@ export default function ProductPage({product, categories, allProducts}) {
     const {favourites, addFavourite, removeFavourite} = useContext(FavouritesContext);
     const [favProducts, setFavProducts] = useState([]);
     const { data: session } = useSession();
-    const [reviews, setReviews] = useState([]);
+    const [sortedReviews, setSortedReviews] = useState([]);
     const [comment, setComment] = useState('');
     const [editing, setEditing] = useState(false);
     const [editedComment, setEditedComment] = useState('');
     const [editedID, setEditedID] = useState('');
+    const [starsPressed, setStarsPressed] = useState([false, false, false, false, false]);
+    const [numOfStars, setNumOfStars] = useState(0);
+    const [editStarsPressed, setEditStarsPressed] = useState([false, false, false, false, false]);
+    const [loading, setLoading] = useState(true);
 
     async function addReview() {
-        if(comment === '') {
+        if(comment === '' || numOfStars === 0) {
             return;
         }
         const productID = product._id;
         const name = session.user.name;
         const email = session.user.email;
         const image = session.user.image;
-        await axios.post('/api/review', { productID, name, email, comment, image });
+        await axios.post('/api/review', { productID, name, email, comment, image, numOfStars });
         fetchReviews();
         setComment('');
+        setNumOfStars(0);
+        setStarsPressed([false, false, false, false, false]);
     }
 
     async function deleteReview(id) {
@@ -193,11 +233,38 @@ export default function ProductPage({product, categories, allProducts}) {
     async function editReview(_id) {
         const name = session.user.name;
         const email = session.user.email;
-        await axios.put('/api/review', {name, email, comment: editedComment, _id});
+        const image = session.user.image;
+        await axios.put('/api/review', {name, email, comment: editedComment, _id, image, numOfStars});
         setEditing(false);
         setEditedComment('')
+        setEditStarsPressed([false, false, false, false, false]);
+        setNumOfStars(0);
         fetchReviews();    
     }   
+
+    function pressedStar(index) {
+        if(!editing) {
+            for(var i = 0; i < 5; i++) {
+                if(i <= index) {
+                    starsPressed[i] = true;
+                }
+                else {
+                    starsPressed[i] = false;
+                }
+            }
+        }
+        if(editing) {
+            for(var i = 0; i < 5; i++) {
+                if(i <= index) {
+                    editStarsPressed[i] = true;
+                }
+                else {
+                    editStarsPressed[i] = false;
+                }
+            }
+        }
+        setNumOfStars(index);
+    }
 
     /* USER FAVOURITES */
     async function removeFav(id) {
@@ -236,15 +303,30 @@ export default function ProductPage({product, categories, allProducts}) {
 
     function fetchReviews() {
         axios.get('/api/review?productID=' + product._id).then(response => {
-            setReviews(response.data);
+            setSortedReviews(response.data.slice(0)
+            .reverse()
+            .map(element => {
+              return element;
+            }));
         });
     };
 
     useEffect(() => {
         fetchReviews();
+        setLoading(false);
     }, [])
     
-
+    if(loading) {
+        return (
+            <>
+                <Header products={allProducts} />
+                <LoadingWrapper>
+                        <ReactLoading type="spin" color="#0000FF"
+                        height={100} width={50}/>
+                </LoadingWrapper>
+            </>
+        );
+    }
     return (
         <Wrapper>
             <Header products={allProducts}/>
@@ -334,25 +416,37 @@ export default function ProductPage({product, categories, allProducts}) {
                     {session &&
                     <>  
                         <StarWrapper>
-                            <StarIcon />
-                            <StarIcon />
-                            <StarIcon />
-                            <StarIcon />
-                            <StarIcon />
-                        </StarWrapper>
+                            {starsPressed.map((star, index) => (
+                                <>
+                                    {star && 
+                                    <div onClick={() => pressedStar(index)}>
+                                        <FilledStarIcon  />
+                                    </div>
+                                    }
+                                    {!star && 
+                                    <div onClick={() => pressedStar(index)}>
+                                        <StarIcon  />
+                                    </div>
+                                    }
+                                </>
+                            ))}
+                        </StarWrapper>  
                         
+                        <TextAreaWrapper>
                         <StyledInput
                             placeholder="Leave a review..." 
                             name="comment" 
                             value={comment} 
                             onChange={(e) => setComment(e.target.value)} />
+                        </TextAreaWrapper>
+
                         <Button black outline 
                                 onClick={addReview}>
                             Submit review
                         </Button>
                     </>
-                    }
-                    {reviews?.length > 0 && reviews.map(review => (
+                    }   
+                    {sortedReviews?.length > 0 && sortedReviews.map(review => (
                         <>
                         {review.productID === product._id &&
                             <ReviewBox>
@@ -364,8 +458,10 @@ export default function ProductPage({product, categories, allProducts}) {
                                         {(new Date(review.updatedAt)).toLocaleString() !== (new Date(review.createdAt)).toLocaleString() &&
                                             <h4>{(new Date(review.updatedAt)).toLocaleString()} (edited)</h4>
                                         }
-                                         
-                                    </ReviewDate>
+                                        {(new Date(review.updatedAt)).toLocaleString() === (new Date(review.createdAt)).toLocaleString() &&
+                                            <h4>{(new Date(review.createdAt)).toLocaleString()}</h4>
+                                        }
+                                    </ReviewDate> 
 
                                     {!editing && review.email === session?.user.email && 
                                         <ReviewIconWrapper>
@@ -382,7 +478,24 @@ export default function ProductPage({product, categories, allProducts}) {
                                         </ReviewIconWrapper>
                                     }
                                 </ReviewHeader>
+
                                 {editing && editedID === review._id && <>
+                                    <StarWrapper>
+                                        {editStarsPressed.map((star, index) => (
+                                            <>
+                                                {star && 
+                                                <div onClick={() => pressedStar(index)}>
+                                                    <FilledStarIcon  />
+                                                </div>
+                                                }
+                                                {!star && 
+                                                <div onClick={() => pressedStar(index)}>
+                                                    <StarIcon  />
+                                                </div>
+                                                }
+                                            </>
+                                        ))}
+                                    </StarWrapper>  
                                     <Input
                                         placeholder={review.comment}
                                         value={editedComment}
@@ -393,17 +506,35 @@ export default function ProductPage({product, categories, allProducts}) {
                                         <Button red outline onClick={() => {setEditing(false)}}>Cancel</Button>
                                     </ButtonHolder>   
                                 </> }
-                                {editing && editedID !== review._id && 
+                                {editing && editedID !== review._id &&
+                                    <>
+                                    <StarWrapper>
+                                        {review.numOfStars === 0 && <FilledStarIcon />}
+                                        {review.numOfStars === 1 && <> <FilledStarIcon /> <FilledStarIcon /> </>}
+                                        {review.numOfStars === 2 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> </>}
+                                        {review.numOfStars === 3 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /></>}
+                                        {review.numOfStars === 4 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /></>}
+                                    </StarWrapper> 
                                     <p>{review.comment}</p>  
+                                    </> 
                                 }
                                 {!editing &&
+                                    <>
+                                    <StarWrapper>
+                                        {review.numOfStars === 0 && <FilledStarIcon />}
+                                        {review.numOfStars === 1 && <> <FilledStarIcon /> <FilledStarIcon /> </>}
+                                        {review.numOfStars === 2 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> </>}
+                                        {review.numOfStars === 3 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /></>}
+                                        {review.numOfStars === 4 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /></>}
+                                    </StarWrapper> 
                                     <p>{review.comment}</p>  
+                                    </>   
                                 }
                             </ReviewBox>
                         }   
                         </>
                     ))}
-                    {reviews?.length === 0 && 
+                    {sortedReviews?.length === 0 && 
                         <ReviewBox>
                             <p>Be the first to leave a review!</p>
                         </ReviewBox>

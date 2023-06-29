@@ -15,18 +15,19 @@ export default async function handler(req, res) {
     }
 
     if(method === 'POST') {
-        const {productID, name, email, comment, image} = req.body;
+        console.log(req.body)
+        const {productID, name, email, comment, image, numOfStars} = req.body;
         const reviewDoc = await Review.create({
-            productID, name, email, comment, image
+            productID, name, email, comment, image, numOfStars,
         });
         res.json(reviewDoc);
     }
 
     if(method === 'PUT') {
         console.log(req.body)
-        const {name, email, comment, _id} = req.body;
+        const {productID, name, email, comment, _id, numOfStars} = req.body;
         await Review.updateOne({_id}, {
-            name, email, comment,
+            productID, name, email, comment, numOfStars,
         });
         res.json(true);
     }
