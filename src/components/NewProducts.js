@@ -20,7 +20,7 @@ export default function NewProducts({products}) {
             <Title props={'New Paintings'} />
             <ProductsGrid products={products} />
             <Container>
-                <h2>Have a specific request?</h2>
+                <h2>Don&apos;t see the painting you want?</h2>
                 <Button primary outline>Send commission request</Button>
             </Container>
         </Center>

@@ -322,6 +322,7 @@ export default function ProductPage({product, categories, allProducts}) {
 
     useEffect(() => {
         fetchReviews();
+        console.log(sortedReviews)
         setLoading(false);
     }, [])
     

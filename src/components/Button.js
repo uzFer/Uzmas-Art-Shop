@@ -43,6 +43,10 @@ export const ButtonStyle = css`
     &:hover {
       background-color: ${redHighlight};
     }
+    svg {
+      height: 18px;
+      margin-right: 5px;
+    }
   `}
   ${props => props.primary && props.outline && css`
     background-color: ${primary}; 
