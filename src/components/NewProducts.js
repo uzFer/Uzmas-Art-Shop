@@ -3,6 +3,7 @@ import Center from "./Center";
 import ProductsGrid from "./ProductsGrid";
 import Title from "./Title";
 import Button from "./Button";
+import { useRouter } from "next/router";
 
 const Container = styled.div`
     background-color: #222;
@@ -15,13 +16,19 @@ const Container = styled.div`
 `;
 
 export default function NewProducts({products}) {
+    const router = useRouter();
+
+    function goToContactForm() {
+        router.push('/contact')
+    }
+    
     return (
         <Center>
             <Title props={'New Paintings'} />
             <ProductsGrid products={products} />
             <Container>
                 <h2>Don&apos;t see the painting you want?</h2>
-                <Button primary outline>Send commission request</Button>
+                <Button primary outline onClick={goToContactForm}>Send commission request</Button>
             </Container>
         </Center>
     );
