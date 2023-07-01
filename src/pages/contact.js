@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Header from "@/components/Header";
 import Button from '@/components/Button';
 import mongooseConnect from '@/lib/mongoose';
@@ -9,6 +9,8 @@ import Box from '@/components/Box';
 import Center from '@/components/Center';
 import Title from '@/components/Title';
 import { styled } from 'styled-components';
+import emailjs from '@emailjs/browser';
+import { useRouter } from "next/router";
 
 const Textarea = styled.textarea`
     width: 100%;
@@ -26,19 +28,26 @@ const Label = styled.div`
     margin: 10px 0;
 `;
 
+const Form = styled.form`
+    
+`;
+
 export default function ContactPage({allProducts}) {
     const { data: session } = useSession();
-    const [name, setName] = useState(session ? session.user.name : '');
-    const [email, setEmail] = useState(session ? session.user.email : '');
-    const [subject, setSubject] = useState('');
-    const [message, setMessage] = useState('');
+    const form = useRef();
+    const router = useRouter();
 
-    function submitRequest() {
-        if(!email && !name && !subject && !message) {
-            return;
-        }
-        const info = {name, email, subject, message}
-        console.log(info)
+    const sendEmail = (e) => {
+        e.preventDefault();
+       
+        emailjs.sendForm('service_tarhdfv', 'template_pju7lfh', form.current, 'u2q1TMt9Ia_zTe7CC')
+        .then((result) => {
+            console.log(result.text);
+            router.push('/');
+
+        }, (error) => {
+            console.log(error.text);
+        });
     }
 
     return (
@@ -47,26 +56,17 @@ export default function ContactPage({allProducts}) {
         <Title props={'Contact me'} />
         <Center>
             <Box>
-                <Label>Name:</Label>
-                <Input type="text" name="name" value={name} 
-                    onChange={(e) => {setName(e.target.value)}}
-                />
-                <Label>Email:</Label>
-                <Input type="text" name="email" value={email}
-                    onChange={(e) => {setEmail(e.target.value)}}
-                />
-
-                <Label>Subject:</Label>
-                <Input type="text" name="subject" value={subject}
-                    onChange={(e) => {setSubject(e.target.value)}}
-                />
-
-                <Label>Message:</Label>
-                <Textarea name="message" value={message}
-                    onChange={(e) => {setMessage(e.target.value)}}
-                />
-
-                <Button black outline onClick={submitRequest}>Submit Request</Button>
+                <Form ref={form} onSubmit={sendEmail}>
+                    <Label>Name:</Label>
+                    <Input type="text" name="user_name" placeholder={session?.user.name} required />
+                    <Label>Email:</Label>
+                    <Input type="text" name="user_email" placeholder={session?.user.email} required />
+                    <Label>Subject:</Label>
+                    <Input type="text" name="subject" required />
+                    <Label>Message:</Label>
+                    <Textarea name="message" rows={5} required />
+                    <Button black outline type="submit">Submit Request</Button>
+                </Form>
             </Box>
         </Center>
     </>
