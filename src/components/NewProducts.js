@@ -23,13 +23,15 @@ export default function NewProducts({products}) {
     }
     
     return (
+        <>
+        <Title props={'New Paintings'} />
         <Center>
-            <Title props={'New Paintings'} />
             <ProductsGrid products={products} />
             <Container>
                 <h2>Don&apos;t see the painting you want?</h2>
-                <Button primary outline onClick={goToContactForm}>Send commission request</Button>
-            </Container>
+                <Button primary={1} outline={1} onClick={goToContactForm}>Send commission request</Button>
+            </Container> 
         </Center>
+        </>
     );
 }

@@ -1,4 +1,3 @@
-import Button from "@/components/Button";
 import Featured from "@/components/Featured";
 import Header from "@/components/Header";
 import NewProducts from "@/components/NewProducts";

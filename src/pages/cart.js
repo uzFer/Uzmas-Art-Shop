@@ -238,7 +238,7 @@ export default function CartPage({allProducts}) {
                                 name="country" 
                                 value={country} 
                                 onChange={(e) => setCountry(e.target.value)} />
-                            <Button block black outline 
+                            <Button block={1} black={1} outline={1} 
                                     onClick={goToPayment}>
                                 Continue to payment
                             </Button>

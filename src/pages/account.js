@@ -45,7 +45,7 @@ const ColWrapper = styled.div`
     margin-top: 40px;
     display: grid;
     grid-template-columns: 1fr;
-    @media screen and (min-width: 768px) {
+    @media screen and (min-width: 830px) {
         grid-template-columns: 1.3fr 0.7fr;
     }
 `;
@@ -181,7 +181,7 @@ export default function AccountPage({allProducts, orders}) {
             <Center>
                 <Container>
                     <p>Signed in as {session.user.email} </p>
-                    <Button primary outline onClick={logOut}>Sign out</Button>
+                    <Button primary={1} outline={1} onClick={logOut}>Sign out</Button>
                 </Container>
 
 
@@ -212,7 +212,7 @@ export default function AccountPage({allProducts, orders}) {
                                             </td>
                                             <td>
                                                 <Button 
-                                                    red outline 
+                                                    red={1} outline={1}
                                                     onClick={() => removeFav(product._id)}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -270,7 +270,7 @@ export default function AccountPage({allProducts, orders}) {
             <Center>
                 <Container>
                     <h2>Sign in to save your info</h2>
-                    <Button primary outline onClick={() => signIn()}>Sign in</Button>
+                    <Button primary={1} outline={1} onClick={() => signIn()}>Sign in</Button>
                 </Container>
 
                 <ColWrapper>
@@ -297,7 +297,7 @@ export default function AccountPage({allProducts, orders}) {
                                             </td>
                                             <td>
                                                 <Button 
-                                                    black outline 
+                                                    black={1} outline={1} 
                                                     onClick={() => removeFav(product._id)}>
                                                     Remove Favourite
                                                 </Button>

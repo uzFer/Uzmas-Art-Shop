@@ -175,7 +175,7 @@ export default function ProductBox({_id, name, description, price, images}) {
                     </Price>
                     <Button 
                         onClick={() => addProduct(_id)}
-                        black outline size="m" >
+                        black={1} outline={1} size="m" >
                         Add to cart
                     </Button>
                 </PriceBox>

@@ -32,6 +32,12 @@ const Form = styled.form`
     
 `;
 
+const Subtitle = styled.div`
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 10px 0 25px 0;
+`;
+
 export default function ContactPage({allProducts}) {
     const { data: session } = useSession();
     const form = useRef();
@@ -57,6 +63,7 @@ export default function ContactPage({allProducts}) {
         <Center>
             <Box>
                 <Form ref={form} onSubmit={sendEmail}>
+                    <Subtitle>Please fill out the following fields with your request: </Subtitle>
                     <Label>Name:</Label>
                     <Input type="text" name="user_name" placeholder={session?.user.name} required />
                     <Label>Email:</Label>
@@ -65,10 +72,10 @@ export default function ContactPage({allProducts}) {
                     <Input type="text" name="subject" required />
                     <Label>Message:</Label>
                     <Textarea name="message" rows={5} required />
-                    <Button black outline type="submit">Submit Request</Button>
+                    <Button black={1} outline={1} type="submit">Submit Request</Button>
                 </Form>
             </Box>
-        </Center>
+        </Center>   
     </>
     );
 }
