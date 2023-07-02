@@ -46,9 +46,10 @@ const Title = styled(Link)`
 
 const ProductInfoBox = styled.div`
     text-align: center;
-    margin-top: 5px;
+    margin-top: 0;
     @media screen and (min-width: 768px) {
         text-align: left;
+        margin-top: 5px;
     }
 `;
 
@@ -183,12 +184,14 @@ export default function ProductBox({_id, name, description, price, images}) {
                     <Price>
                         ${price}
                     </Price>
-                    <Button 
-                        onClick={() => addProductToCart(_id)}
-                        black={1} outline={1} size="m" >
-                        Add to cart
-                    </Button>
-                    <ToastContainer theme="dark" />
+                    <div>
+                        <Button 
+                            onClick={() => addProductToCart(_id)}
+                            black={1} outline={1} size="m" >
+                            Add to cart
+                        </Button>
+                        <ToastContainer theme="dark" />
+                    </div>
                 </PriceBox>
             </ProductInfoBox>
         </ProductWrapper>

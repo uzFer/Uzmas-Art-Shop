@@ -39,9 +39,6 @@ const StyledNav = styled.nav`
     ` : `
         display: none;
     `};
-    ${props => props.showSearch && css`
-        display: none;
-    `};
     transition: all 0.3s ease-in-out;
     gap: 20px;
     position: fixed;
@@ -158,7 +155,7 @@ export default function Header({products}) {
                         <NavLink href={'/'}>Home</NavLink>
                         <NavLink href={'/products'}>Paintings</NavLink>
                         <NavLink href={'/account'}>Account</NavLink>
-                        <NavLink href={'/cart'}>Cart ({cartProducts.length})</NavLink>
+                        <NavLink href={'/cart'}>Cart({cartProducts.length})</NavLink>
                        
                         <div>
                             <SearchWrapper>
@@ -177,7 +174,7 @@ export default function Header({products}) {
                             
                             <SuggestionWrapper>
                                 {products?.map(product => (
-                                    <>  
+                                    <div key={product}>  
                                     {searchEntry !== '' && product.name.toLowerCase().includes(searchEntry.toLowerCase()) &&
                                         <Suggestion
                                             href={'/product/' + product._id}
@@ -187,7 +184,7 @@ export default function Header({products}) {
                                             {product.name}
                                         </Suggestion>
                                     }
-                                    </>
+                                    </div>
                                 ))}
                             </SuggestionWrapper>
                         </div>

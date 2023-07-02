@@ -13,8 +13,6 @@ import { styled } from "styled-components";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import ReactLoading from "react-loading";
-import React from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { primary } from "@/lib/colours";
@@ -33,13 +31,6 @@ const TitleText = styled.span`
     border-radius: 20px;
     background-color: ${primary};
     color: #fff;
-`;
-
-const LoadingWrapper = styled.div`
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 `;
 
 const ColWrapper = styled.div`
@@ -123,7 +114,6 @@ const CarouselWrapper = styled.div`
 export default function AccountPage({allProducts, orders}) {
     const {favourites, removeFavourite} = useContext(FavouritesContext);
     const [favProducts, setFavProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
     const { data: session } = useSession();
     const router = useRouter();
 
@@ -164,22 +154,6 @@ export default function AccountPage({allProducts, orders}) {
             });
         }
     }, [favProducts]);
-
-    useEffect(() => {
-        setLoading(false);
-    }, [])
-    
-    if(loading) {
-        return (
-        <>
-            <Header products={allProducts} />
-            <LoadingWrapper>
-                    <ReactLoading type="spin" color="#0000FF"
-                    height={100} width={50}/>
-            </LoadingWrapper>
-        </>
-        );
-    }
     
     if(session) {
         return (

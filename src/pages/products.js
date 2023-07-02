@@ -8,7 +8,6 @@ import { Product } from "@/models/Product";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import { styled } from "styled-components";
-import ReactLoading from "react-loading";
 
 const Wrapper = styled.div`
     display: flex;
@@ -19,13 +18,6 @@ const Wrapper = styled.div`
         flex-direction: row;
         justify-content: space-between;
     }
-`;
-
-const LoadingWrapper = styled.div`
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 `;
 
 const options = [ 
@@ -56,7 +48,6 @@ const customStyles = {
 export default function ProductsPage({products}) {
     const [selected, setSelected] = useState(null);
     const [filteredProducts, setFilteredProducts] = useState(products);
-    const [loading, setLoading] = useState(true);
 
     const handleChange = (selectedOption) => {
         setSelected(selectedOption);
@@ -85,21 +76,6 @@ export default function ProductsPage({products}) {
         }
     };
 
-    useEffect(() => {
-        setLoading(false)
-    }, [])
-
-    if(loading) {
-        return (
-            <>
-                <Header products={products} />
-                <LoadingWrapper>
-                        <ReactLoading type="spin" color="#0000FF"
-                        height={100} width={50}/>
-                </LoadingWrapper>
-            </>
-        );
-    }
     return (
         <>
             <Header products={products} />

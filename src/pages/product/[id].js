@@ -10,7 +10,7 @@ import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import { useContext, useEffect, useState } from "react";
 import { css, styled } from "styled-components";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import axios from "axios";
 import StarIcon from "@/components/icons/StarIcon";
 import TrashIcon from "@/components/icons/TrashIcon";
@@ -204,7 +204,6 @@ const Container = styled.div`
     text-align: center;
     border-radius: 10px;
 `;
-
 
 export default function ProductPage({product, categories, allProducts}) {
     const {addProduct} = useContext(CartContext);
