@@ -172,12 +172,12 @@ export default function Header({products}) {
 
                                 <SearchButton
                                     onClick={() => setShowMobileNav(false)} 
-                                    url={searchEntry === '' ? '/' : '/search/' + searchEntry} /> 
+                                    url={searchEntry === '' ? '' : '/search/' + searchEntry} /> 
                             </SearchWrapper>
                             
                             <SuggestionWrapper>
                                 {products?.map(product => (
-                                    <>
+                                    <>  
                                     {searchEntry !== '' && product.name.toLowerCase().includes(searchEntry.toLowerCase()) &&
                                         <Suggestion
                                             href={'/product/' + product._id}

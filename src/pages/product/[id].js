@@ -18,6 +18,8 @@ import EditIcon from "@/components/icons/EditIcon";
 import Input from "@/components/Input";
 import FilledStarIcon from "@/components/icons/FilledStarIcon";
 import ReactLoading from "react-loading";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoadingWrapper = styled.div`
     height: 100vh;
@@ -219,8 +221,19 @@ export default function ProductPage({product, categories, allProducts}) {
     const [editStarsPressed, setEditStarsPressed] = useState([false, false, false, false, false]);
     const [loading, setLoading] = useState(true);
 
+    function addProductToCart(id) {
+        const successMessage = 'Added ' + product.name + ' to cart!';
+        addProduct(id);
+        toast.success(successMessage, {
+            position: toast.POSITION.TOP_RIGHT
+        });
+    }
+
     async function addReview() {
         if(comment === '' || numOfStars === -1) {
+            toast.error('Your review is not complete', {
+                position: "top-right"
+            });
             return;
         }
         const productID = product._id;
@@ -228,6 +241,9 @@ export default function ProductPage({product, categories, allProducts}) {
         const email = session.user.email;
         const image = session.user.image;
         await axios.post('/api/review', { productID, name, email, comment, image, numOfStars });
+        toast.success('Successfully added your review!', {
+            position: toast.POSITION.TOP_RIGHT
+        });
         fetchReviews();
         setComment('');
         setNumOfStars(-1);
@@ -286,6 +302,9 @@ export default function ProductPage({product, categories, allProducts}) {
             productID, name, email, description, price, images
         };
         await axios.post('/api/userfavourites', data);
+        toast.success('Added to favourites!', {
+            position: toast.POSITION.TOP_RIGHT
+        });
     }
 
     /* NON USER FAVOURITES */
@@ -322,19 +341,18 @@ export default function ProductPage({product, categories, allProducts}) {
 
     useEffect(() => {
         fetchReviews();
-        console.log(sortedReviews)
         setLoading(false);
     }, [])
     
     if(loading) {
         return (
-            <>
-                <Header products={allProducts} />
-                <LoadingWrapper>
-                        <ReactLoading type="spin" color="#0000FF"
-                        height={100} width={50}/>
-                </LoadingWrapper>
-            </>
+        <>
+            <Header products={allProducts} />
+            <LoadingWrapper>
+                    <ReactLoading type="spin" color="#0000FF"
+                    height={100} width={50}/>
+            </LoadingWrapper>
+        </>
         );
     }
     return (
@@ -365,7 +383,7 @@ export default function ProductPage({product, categories, allProducts}) {
                             </Price>
                         </PriceWrapper>
                         <div style={{marginBottom: '10px'}}>
-                            <Button black outline onClick={() => addProduct(product._id)}>
+                            <Button black outline onClick={() => addProductToCart(product._id)}>
                                 Add to cart
                             </Button>
                         </div>
@@ -556,7 +574,7 @@ export default function ProductPage({product, categories, allProducts}) {
                         </ReviewBox>
                     }
                 </ReviewList>
-                
+                <ToastContainer theme="dark" />
             </Center>
         </Wrapper>
     );

@@ -8,6 +8,8 @@ import { FavouritesContext } from "./FavouritesContext";
 import axios from "axios";
 import FilledHeartIcon from "./icons/FilledHeartIcon";
 import { useSession } from "next-auth/react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductWrapper = styled.div`
 
@@ -84,6 +86,14 @@ export default function ProductBox({_id, name, description, price, images}) {
     const [favProducts, setFavProducts] = useState([]);
     const url = '/product/' + _id;
     const { data: session } = useSession();
+
+    const addProductToCart = (id) => {
+        const successMessage = 'Added ' + name + ' to cart!';
+        addProduct(id);
+        toast.success(successMessage, {
+            position: toast.POSITION.TOP_RIGHT
+        });
+    }
 
     async function removeFav(id) {
         await axios.delete('/api/userfavourites?_id=' + id); 
@@ -174,10 +184,11 @@ export default function ProductBox({_id, name, description, price, images}) {
                         ${price}
                     </Price>
                     <Button 
-                        onClick={() => addProduct(_id)}
+                        onClick={() => addProductToCart(_id)}
                         black={1} outline={1} size="m" >
                         Add to cart
                     </Button>
+                    <ToastContainer theme="dark" />
                 </PriceBox>
             </ProductInfoBox>
         </ProductWrapper>

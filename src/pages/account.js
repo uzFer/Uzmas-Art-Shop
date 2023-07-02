@@ -18,6 +18,8 @@ import React from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { primary } from "@/lib/colours";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TitleWrapper = styled.h2`
     padding: 10px;
@@ -53,7 +55,7 @@ const ColWrapper = styled.div`
 const TableWrapper = styled.div`
     background-color: #fff;
     border-radius: 10px;
-    padding: 60px;
+    padding: 30px;
     max-height: 100%;
 `;
 
@@ -99,6 +101,10 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
+    display: none;
+    @media screen and (min-width: 830px) {
+        display: block;
+    }
 `;
 
 const CarouselWrapper = styled.div`
@@ -107,7 +113,6 @@ const CarouselWrapper = styled.div`
     width: 350px;
     background-color: #fff;
     border-radius: 15px;
-    text-align: center; 
     img {
         max-width: 250px;
         max-height: 100%;
@@ -131,9 +136,11 @@ export default function AccountPage({allProducts, orders}) {
         }
     }
 
-    async function logOut() {
-        await router.push('../');
-        await signOut();
+    function logOut() {
+        signOut();
+        toast('Signing out of your account', {
+            position: "top-right"
+        });
     }
 
     useEffect(() => {
@@ -164,24 +171,25 @@ export default function AccountPage({allProducts, orders}) {
     
     if(loading) {
         return (
-            <>
-                <Header products={allProducts} />
-                <LoadingWrapper>
-                        <ReactLoading type="spin" color="#0000FF"
-                        height={100} width={50}/>
-                </LoadingWrapper>
-            </>
+        <>
+            <Header products={allProducts} />
+            <LoadingWrapper>
+                    <ReactLoading type="spin" color="#0000FF"
+                    height={100} width={50}/>
+            </LoadingWrapper>
+        </>
         );
     }
     
     if(session) {
         return (
-        <div>
+        <>
             <Header products={allProducts} />
             <Center>
                 <Container>
                     <p>Signed in as {session.user.email} </p>
                     <Button primary={1} outline={1} onClick={logOut}>Sign out</Button>
+                    <ToastContainer theme="dark" />
                 </Container>
 
 
@@ -232,13 +240,10 @@ export default function AccountPage({allProducts, orders}) {
                             </Table>
                         )}
                     </TableWrapper>
-                
                     <Wrapper>
-                <TitleWrapper>
-                    <TitleText>Buy it again!</TitleText>
-                </TitleWrapper>
-              
-                    
+                        <TitleWrapper>
+                            <TitleText>Buy it again!</TitleText>
+                        </TitleWrapper>
                         <CarouselWrapper>
                             <Carousel>
                                 {orders?.map(order => (
@@ -260,12 +265,12 @@ export default function AccountPage({allProducts, orders}) {
                     </Wrapper>
                 </ColWrapper>
             </Center> 
-        </div>
+        </>
         );
     }
     
     return (
-        <div>
+        <>
             <Header products={allProducts} />
             <Center>
                 <Container>
@@ -273,7 +278,6 @@ export default function AccountPage({allProducts, orders}) {
                     <Button primary={1} outline={1} onClick={() => signIn()}>Sign in</Button>
                 </Container>
 
-                <ColWrapper>
                     <Box>
                         <h1>Your favourites</h1>
                         {!favourites?.length &&
@@ -297,8 +301,11 @@ export default function AccountPage({allProducts, orders}) {
                                             </td>
                                             <td>
                                                 <Button 
-                                                    black={1} outline={1} 
+                                                    red={1} outline={1} 
                                                     onClick={() => removeFav(product._id)}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
                                                     Remove Favourite
                                                 </Button>
                                             </td>
@@ -312,9 +319,8 @@ export default function AccountPage({allProducts, orders}) {
                             </Table>
                         )}
                     </Box>
-                </ColWrapper>
             </Center> 
-        </div>
+        </>
     );
 }
 

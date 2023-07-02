@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import Header from "@/components/Header";
 import Button from '@/components/Button';
 import mongooseConnect from '@/lib/mongoose';
@@ -11,6 +11,8 @@ import Title from '@/components/Title';
 import { styled } from 'styled-components';
 import emailjs from '@emailjs/browser';
 import { useRouter } from "next/router";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Textarea = styled.textarea`
     width: 100%;
@@ -29,7 +31,6 @@ const Label = styled.div`
 `;
 
 const Form = styled.form`
-    
 `;
 
 const Subtitle = styled.div`
@@ -42,6 +43,7 @@ export default function ContactPage({allProducts}) {
     const { data: session } = useSession();
     const form = useRef();
     const router = useRouter();
+    const notify = () => toast("Request submitted!");
 
     const sendEmail = (e) => {
         e.preventDefault();
@@ -72,7 +74,7 @@ export default function ContactPage({allProducts}) {
                     <Input type="text" name="subject" required />
                     <Label>Message:</Label>
                     <Textarea name="message" rows={5} required />
-                    <Button black={1} outline={1} type="submit">Submit Request</Button>
+                    <Button black={1} outline={1} type="submit" onClick={notify}>Submit Request</Button>
                 </Form>
             </Box>
         </Center>   

@@ -5,6 +5,8 @@ import ButtonLink from "./ButtonLink";
 import CartIcon from "./icons/CartIcon";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Background = styled.div`
     background-color: #222; 
@@ -72,7 +74,11 @@ export default function Featured({product}) {
     const {addProduct} = useContext(CartContext);
     
     function addFeaturedToCart() {
-      addProduct(product._id);
+        const successMessage = 'Added ' + product.name + ' to cart!';
+        addProduct(product._id);
+        toast.success(successMessage, {
+            position: toast.POSITION.TOP_RIGHT
+        });
     }
 
     return (
@@ -93,6 +99,7 @@ export default function Featured({product}) {
                                     <CartIcon />
                                     Add to cart
                                 </Button>
+                                <ToastContainer theme="dark" />
                             </ButtonWrapper>
                         </div>
                     </Col>
