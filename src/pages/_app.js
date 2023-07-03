@@ -48,10 +48,10 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
           <FavouritesContextProvider>
           <React.Fragment>
           <Head>
-            <title>Home page</title>
+            <title>uzma&apos;s art shop</title>
           </Head>
           {loading ? (
-              <Loader />
+              <Loader loadingPathname={route} />
           ) : (
             <Component {...pageProps} />
           )}

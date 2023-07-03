@@ -11,13 +11,24 @@ const LoadingWrapper = styled.div`
     justify-content: center;
 `;
 
-export default function Loader() {
+export default function Loader({loadingPathname}) {
     return (
     <>
         <Header  />
         <Center>
             <LoadingWrapper>
                 <HashLoader color={primary} size={50} />
+                <span className="loader-span">
+                    {loadingPathname === '/'
+                    ? '/home'
+                    : loadingPathname === '/blog'
+                    ? '/blog'
+                    : loadingPathname === '/articles'
+                    ? '/articles'
+                    : loadingPathname === '/projects'
+                    ? '/projects'
+                    : null}
+                </span>
             </LoadingWrapper>
         </Center>
     </>

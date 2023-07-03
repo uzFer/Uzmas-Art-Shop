@@ -17,16 +17,8 @@ import TrashIcon from "@/components/icons/TrashIcon";
 import EditIcon from "@/components/icons/EditIcon";
 import Input from "@/components/Input";
 import FilledStarIcon from "@/components/icons/FilledStarIcon";
-import ReactLoading from "react-loading";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-const LoadingWrapper = styled.div`
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
 
 const ColWrapper = styled.div` 
     display: grid;
@@ -218,7 +210,6 @@ export default function ProductPage({product, categories, allProducts}) {
     const [starsPressed, setStarsPressed] = useState([false, false, false, false, false]);
     const [numOfStars, setNumOfStars] = useState(-1);
     const [editStarsPressed, setEditStarsPressed] = useState([false, false, false, false, false]);
-    const [loading, setLoading] = useState(true);
 
     function addProductToCart(id) {
         const successMessage = 'Added ' + product.name + ' to cart!';
@@ -340,20 +331,8 @@ export default function ProductPage({product, categories, allProducts}) {
 
     useEffect(() => {
         fetchReviews();
-        setLoading(false);
     }, [])
     
-    if(loading) {
-        return (
-        <>
-            <Header products={allProducts} />
-            <LoadingWrapper>
-                    <ReactLoading type="spin" color="#0000FF"
-                    height={100} width={50}/>
-            </LoadingWrapper>
-        </>
-        );
-    }
     return (
         <Wrapper>
             <Header products={allProducts}/>
