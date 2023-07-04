@@ -1,7 +1,8 @@
 import { CartContextProvider } from "@/components/CartContext";
 import { FavouritesContextProvider } from "@/components/FavouritesContext";
-import { createGlobalStyle } from "styled-components"
-import { SessionProvider } from "next-auth/react"
+import { createGlobalStyle } from "styled-components";
+import { SessionProvider } from "next-auth/react";
+import { ConfirmProvider } from "material-ui-confirm";
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/Loader";
@@ -46,16 +47,18 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
       <SessionProvider session={session}>
         <CartContextProvider>
           <FavouritesContextProvider>
-          <React.Fragment>
-          <Head>
-            <title>uzma&apos;s art shop</title>
-          </Head>
-          {loading ? (
-              <Loader loadingPathname={route} />
-          ) : (
-            <Component {...pageProps} />
-          )}
-        </React.Fragment>
+            <ConfirmProvider>
+              <React.Fragment>
+                <Head>
+                  <title>uzma&apos;s art shop</title>
+                </Head>
+                {loading ? (
+                    <Loader loadingPathname={route} />
+                ) : (
+                  <Component {...pageProps} />
+                )}
+              </React.Fragment>
+            </ConfirmProvider>
           </FavouritesContextProvider>
         </CartContextProvider>
       </SessionProvider>

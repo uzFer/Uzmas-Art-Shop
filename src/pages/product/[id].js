@@ -19,6 +19,7 @@ import Input from "@/components/Input";
 import FilledStarIcon from "@/components/icons/FilledStarIcon";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useConfirm } from "material-ui-confirm";
 
 const ColWrapper = styled.div` 
     display: grid;
@@ -210,6 +211,7 @@ export default function ProductPage({product, categories, allProducts}) {
     const [starsPressed, setStarsPressed] = useState([false, false, false, false, false]);
     const [numOfStars, setNumOfStars] = useState(-1);
     const [editStarsPressed, setEditStarsPressed] = useState([false, false, false, false, false]);
+    const confirm = useConfirm();
 
     function addProductToCart(id) {
         const successMessage = 'Added ' + product.name + ' to cart!';
@@ -241,8 +243,17 @@ export default function ProductPage({product, categories, allProducts}) {
     }
 
     async function deleteReview(id) {
-        await axios.delete('/api/review?_id=' + id);
-        fetchReviews();
+        //confirm({ title: 'Are you sure you want to delete your review?', description: "This action is permanent." })
+            //.then( async () => {
+            await axios.delete('/api/review?_id=' + id);
+            //     toast.success('Deleting reivew', {
+            //         position: toast.POSITION.TOP_RIGHT
+            //     });
+            //})
+            // .catch(() => {
+            //     console.log('no')
+            // });
+            fetchReviews();
     }   
 
     async function editReview(_id) {
