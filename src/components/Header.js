@@ -34,7 +34,7 @@ const Wrapper = styled.div`
 `;
 
 const StyledNav = styled.nav`
-    ${props => props.showMobileNav ? `
+    ${props => props.show ? `
         display: block;
     ` : `
         display: none;
@@ -151,7 +151,7 @@ export default function Header({products}) {
                         Uzma&apos;s Art Shop
                     </Logo>
 
-                    <StyledNav showMobileNav={showMobileNav}>
+                    <StyledNav show={showMobileNav ? 1 : 0}>
                         <NavLink href={'/'}>Home</NavLink>
                         <NavLink href={'/products'}>Paintings</NavLink>
                         <NavLink href={'/account'}>Account</NavLink>
