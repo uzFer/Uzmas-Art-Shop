@@ -169,7 +169,7 @@ export default function Header({products}) {
 
                                 <SearchButton
                                     onClick={() => setShowMobileNav(false)} 
-                                    url={searchEntry === '' ? '' : '/search/' + searchEntry} /> 
+                                    url={searchEntry === '' ? '/products' : '/search/' + searchEntry} /> 
                             </SearchWrapper>
                             
                             <SuggestionWrapper>

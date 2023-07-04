@@ -15,7 +15,7 @@ const ProductWrapper = styled.div`
     margin: 10px;
     background-color: #fff;
     @media screen and (min-width: 700px) {
-        grid-template-columns: 0.6fr 1.4fr;
+        grid-template-columns: 0.5fr 1.5fr;
     }
 `;
 

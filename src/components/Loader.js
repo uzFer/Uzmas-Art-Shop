@@ -17,18 +17,7 @@ export default function Loader({loadingPathname}) {
         <Header  />
         <Center>
             <LoadingWrapper>
-                <HashLoader color={primary} size={50} />
-                <span className="loader-span">
-                    {loadingPathname === '/'
-                    ? '/home'
-                    : loadingPathname === '/blog'
-                    ? '/blog'
-                    : loadingPathname === '/articles'
-                    ? '/articles'
-                    : loadingPathname === '/projects'
-                    ? '/projects'
-                    : null}
-                </span>
+                <HashLoader color={primary} size={70} />
             </LoadingWrapper>
         </Center>
     </>
