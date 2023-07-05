@@ -10,6 +10,7 @@ import FilledHeartIcon from "./icons/FilledHeartIcon";
 import { useSession } from "next-auth/react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Image from "next/image";
 
 const ProductWrapper = styled.div`
 
@@ -172,7 +173,7 @@ export default function ProductBox({_id, name, description, price, images}) {
                             </Heart>
                         }
                     </>
-                    }
+                    } 
                     <Link href={url}>
                         <img src={images?.[0]} alt={name} />
                     </Link>

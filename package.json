@@ -33,5 +33,8 @@
     "react-toastify": "^9.1.3",
     "stripe": "^12.9.0",
     "styled-components": "^6.0.0-rc.3"
+  },
+  "devDependencies": {
+    "babel-plugin-styled-components": "^2.1.4"
   }
 }

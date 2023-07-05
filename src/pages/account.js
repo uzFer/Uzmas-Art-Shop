@@ -19,34 +19,10 @@ import { primary } from "@/lib/colours";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const TitleWrapper = styled.h2`
-    padding: 10px;
-    margin: 50px 0 20px;
-    text-align: center;
-`;
-
-const TitleText = styled.span`
-    font-size: 1.7rem;
-    padding: 10px;
-    border-radius: 20px;
-    background-color: ${primary};
-    color: #fff;
-`;
-
-const ColWrapper = styled.div`
-    gap: 40px;
-    margin-top: 40px;
-    display: grid;
-    grid-template-columns: 1fr;
-    @media screen and (min-width: 830px) {
-        grid-template-columns: 1.3fr 0.7fr;
-    }
-`;
-
 const TableWrapper = styled.div`
     background-color: #fff;
     border-radius: 10px;
-    padding: 30px;
+    padding: 50px;
     max-height: 100%;
 `;
 
@@ -67,14 +43,14 @@ const ProductImageBox = styled.div`
     justify-content: center;
     img {
         max-width: 100%;
-        max-height: 130px;
+        max-height: 160px;
         margin-right: 30px;
     }
     @media screen and (min-width: 768px) {
         background-color: #eee;
         margin-right: 0px;
         padding: 10px;
-        height: 130px;
+        height: 160px;
         width: 160px;
         img {
             margin-right: 0px;
@@ -93,21 +69,6 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
     display: none;
-    @media screen and (min-width: 830px) {
-        display: block;
-    }
-`;
-
-const CarouselWrapper = styled.div`
-    padding: 15px;
-    height: 320px;  
-    width: 350px;
-    background-color: #fff;
-    border-radius: 15px;
-    img {
-        max-width: 250px;
-        max-height: 100%;
-    }
 `;
 
 
@@ -165,79 +126,50 @@ export default function AccountPage({allProducts, orders}) {
                     <Button primary={1} outline={1} onClick={logOut}>Sign out</Button>
                     <ToastContainer theme="dark" />
                 </Container>
-
-
-                <ColWrapper>
-                    <TableWrapper>
-                        <h1>Your favourites</h1>
-                        {!favourites?.length && !session &&
-                            <div>No favourites yet!</div>
-                        }
-                        {!favProducts?.length && session &&
-                            <div>No favourites yet!</div>
-                        }
-                        {favProducts?.length > 0 && (
-                            <Table>
-                                <thead>
-                                </thead>
-                                <tbody>
-                                    {favProducts.map(product => (
-                                        <tr key={product}>
-                                            <td>
-                                            <ProductInfoBox href={session ? '/product/' + product.productID : '/product/' + product._id}>
-                                                <ProductImageBox>
-                                                    <img src={product.images[0]}></img>
-                                                </ProductImageBox>   
-                                                <p>{product.name}</p>
-                                                <p>${product.price.toFixed(2)}</p>
-                                            </ProductInfoBox>  
-                                            </td>
-                                            <td>
-                                                <Button 
-                                                    red={1} outline={1}
-                                                    onClick={() => removeFav(product._id)}>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                        </svg>
-
-                                                    Remove fav
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
+                <TableWrapper>
+                    <h1>Your favourites</h1>
+                    {!favourites?.length && !session &&
+                        <div>No favourites yet!</div>
+                    }
+                    {!favProducts?.length && session &&
+                        <div>No favourites yet!</div>
+                    }
+                    {favProducts?.length > 0 && (
+                        <Table>
+                            <thead>
+                            </thead>
+                            <tbody>
+                                {favProducts.map(product => (
+                                    <tr key={product}>
+                                        <td>
+                                        <ProductInfoBox href={session ? '/product/' + product.productID : '/product/' + product._id}>
+                                            <ProductImageBox>
+                                                <img src={product.images[0]}></img>
+                                            </ProductImageBox>   
+                                            <p>{product.name}</p>
+                                            <p>${product.price.toFixed(2)}</p>
+                                        </ProductInfoBox>  
+                                        </td>
+                                        <td>
+                                            <Button 
+                                                red={1} outline={1}
+                                                onClick={() => removeFav(product._id)}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                Remove fav
+                                            </Button>
+                                        </td>
                                     </tr>
-                                    
-                                </tbody>
-                            </Table>
-                        )}
-                    </TableWrapper>
-                    <Wrapper>
-                        <TitleWrapper>
-                            <TitleText>Buy it again!</TitleText>
-                        </TitleWrapper>
-                        <CarouselWrapper>
-                            <Carousel>
-                                {orders?.map(order => (
-                                    <div key={order}>
-                                        {order.email === session.user.email && order.line_items[0].price_data.product_data.images.map(l => (
-                                        <>
-                                            <div key={l}>
-                                                <img src={l} /> 
-                                                <p className="legend">
-                                                    {order.line_items[0].price_data.product_data.name} on {(new Date(order.createdAt)).toDateString()}
-                                                </p>
-                                            </div>
-                                        </>
-                                        ))}
-                                    </div>
-                                ))}  
-                            </Carousel>
-                        </CarouselWrapper>
-                    </Wrapper>
-                </ColWrapper>
+                                ))}
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                    )}
+                </TableWrapper>
             </Center> 
         </>
         );

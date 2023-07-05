@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styled, { css } from "styled-components";
+import { styled, css } from "styled-components";
 import Center from "./Center";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
