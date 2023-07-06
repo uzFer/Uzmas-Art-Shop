@@ -349,17 +349,19 @@ export default function ProductPage({product, categories, allProducts}) {
                     <div>
                         <ProductInfo>
                             <h1>{product.name}</h1>
+                            
+                            {categories?.map(category => (
+                            <>
+                                {category._id === product.category &&
+                                    <Tag>
+                                        <TagTitle type={category.name}>{category.name}</TagTitle>
+                                    </Tag>
+                                }
+                            </>
+                            ))}
                             <p>{product.description}</p>
                         </ProductInfo>
-                        {categories?.map(category => (
-                            <>
-                            {category._id === product.category &&
-                                <Tag>
-                                    <TagTitle type={category.name}>{category.name}</TagTitle>
-                                </Tag>
-                            }
-                            </>
-                        ))}
+                        
                         <PriceWrapper>
                             <Price>
                                 ${product.price}

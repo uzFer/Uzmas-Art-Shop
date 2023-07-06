@@ -13,62 +13,123 @@ import { styled } from "styled-components";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { primary } from "@/lib/colours";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Title from "@/components/Title";
 
-const TableWrapper = styled.div`
+const EmptyWrapper = styled.div`
     background-color: #fff;
-    border-radius: 10px;
-    padding: 50px;
-    max-height: 100%;
-`;
-
-const ProductInfoBox = styled(Link)`
-    text-decoration: none;
-    color: #000;
-    padding: 12px;
-`;
-
-const ProductImageBox = styled.div`
-    width: 100%;
-    height: 100%;
-    padding: 2px;
-    margin: 10px 0;
-    background-color: #fff;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    img {
-        max-width: 100%;
-        max-height: 160px;
-        margin-right: 30px;
-    }
-    @media screen and (min-width: 768px) {
-        background-color: #eee;
-        margin-right: 0px;
-        padding: 10px;
-        height: 160px;
-        width: 160px;
-        img {
-            margin-right: 0px;
-        }
-    }
+    padding: 25px;
+    border-radius: 20px;
 `;
 
 const Container = styled.div`
     background-color: #222;
     color: #fff;
-    margin: 20px 0;
-    padding: 10px 0 20px 0;
+    margin: 30px 0 60px 0;
+    padding: 20px 0 20px 0;
     text-align: center;
     border-radius: 10px;
     font-size: 0.8rem;
+    img {
+        height: 25px;
+        width: 25px;
+        border-radius: 15px;
+        margin-right: 15px;
+    }
     @media screen and (min-width: 768px) {
         font-size: 1rem;
     }
 `;
 
+const ContainerHeader = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const ContainerHeaderBg = styled.div`
+    display: inline-block;
+    background-color: #555;
+    padding: 0 10px;
+    border-radius: 15px;
+    margin: 15px 0;
+`;
+
+const StyledProductsGrid = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    @media screen and (min-width: 700px) {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+`;
+
+const ProductWrapper = styled.div`
+
+`;
+
+const WhiteBox = styled.div`
+    background-color: #eee;
+    padding: 15px;
+    height: 350px;  
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    img {
+        max-width: 100%;
+        max-height: 100%;
+        box-shadow: 0px 6px 8px 0 rgba(0, 0, 0, 0.2), 0px 6px 20px 0 rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+        &:hover {
+            background-color: #fff;
+        }
+    }
+`;
+
+const ProductTitle = styled(Link)`
+    font-weight: normal;
+    font-size: 1rem;
+    color: #000;
+    text-decoration: none;
+    margin: 0;
+`;
+
+const ProductInfoBox = styled.div`
+    text-align: center;
+    margin-top: 0;
+    @media screen and (min-width: 768px) {
+        text-align: left;
+        margin-top: 5px;
+    }
+`;
+
+const PriceBox = styled.div`
+    display: block;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2px;
+    @media screen and (min-width: 768px) {
+        display: flex;
+        gap: 5px;
+    }
+`;
+
+const Price = styled.div`
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    @media screen and (min-width: 768px) {
+        margin-bottom: 0;
+    }
+`;
+
+const ImageWrapper = styled.div`
+    
+`;
 
 export default function AccountPage({allProducts, orders}) {
     const {favourites, removeFavourite} = useContext(FavouritesContext);
@@ -120,54 +181,57 @@ export default function AccountPage({allProducts, orders}) {
             <Header products={allProducts} />
             <Center>
                 <Container>
+                    <ContainerHeaderBg>
+                        <ContainerHeader>
+                            <img src={session.user.image} alt="User image" />
+                            <p>{session.user.name}</p>
+                        </ContainerHeader>
+                    </ContainerHeaderBg>
                     <p>Signed in as {session.user.email} </p>
-                    <Button primary={1} outline={1} onClick={logOut}>Sign out</Button>
+                    <Button white={1} outline={1} onClick={logOut}>Sign out</Button>
                     <ToastContainer theme="dark" />
                 </Container>
-                <TableWrapper>
-                    <h1>Your favourites</h1>
+
+                    <Title props={'Your favourites'} />
                     {!favourites?.length && !session &&
-                        <div>No favourites yet!</div>
+                        <EmptyWrapper>No favourites yet!</EmptyWrapper>
                     }
                     {!favProducts?.length && session &&
-                        <div>No favourites yet!</div>
+                        <EmptyWrapper>No favourites yet!</EmptyWrapper>
                     }
                     {favProducts?.length > 0 && (
-                        <Table>
-                            <thead>
-                            </thead>
-                            <tbody>
-                                {favProducts.map(product => (
-                                    <tr key={product}>
-                                        <td>
-                                        <ProductInfoBox href={session ? '/product/' + product.productID : '/product/' + product._id}>
-                                            <ProductImageBox>
-                                                <img src={product.images[0]}></img>
-                                            </ProductImageBox>   
-                                            <p>{product.name}</p>
-                                            <p>${product.price.toFixed(2)}</p>
-                                        </ProductInfoBox>  
-                                        </td>
-                                        <td>
-                                            <Button 
-                                                red={1} outline={1}
-                                                onClick={() => removeFav(product._id)}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                Remove fav
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))}
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </Table>
+                        <StyledProductsGrid>
+                        {favProducts.map(product => (
+                            <div key={product}>
+                                <ProductWrapper> 
+                                <WhiteBox> 
+                                    <ImageWrapper>
+                                        <Link href={'/product/' + product._id}>
+                                            <img src={product.images?.[0]} alt={product.name} />
+                                        </Link>
+                                    </ImageWrapper>
+                                </WhiteBox> 
+                                <ProductInfoBox>
+                                    <ProductTitle href={'/product/' + product.productID}>{product.name}</ProductTitle>
+                                    <PriceBox>
+                                        <Price>
+                                            ${product.price}
+                                        </Price>
+                                        <Button 
+                                            red={1} outline={1} 
+                                            onClick={() => removeFav(product._id)}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Remove
+                                        </Button>
+                                    </PriceBox>
+                                </ProductInfoBox>
+                            </ProductWrapper>
+                            </div>
+                        ))}
+                        </StyledProductsGrid>
                     )}
-                </TableWrapper>
             </Center> 
         </>
         );
@@ -181,48 +245,43 @@ export default function AccountPage({allProducts, orders}) {
                     <h2>Sign in to save your info</h2>
                     <Button primary={1} outline={1} onClick={() => signIn()}>Sign in</Button>
                 </Container>
-
-                    <Box>
-                        <h1>Your favourites</h1>
-                        {!favourites?.length &&
-                            <div>No favourites yet!</div>
-                        }
-                        {favProducts?.length > 0 && (
-                            <Table>
-                                <thead>
-                                </thead>
-                                <tbody>
-                                    {favProducts.map(product => (
-                                        <tr key={product}>
-                                            <ProductInfoBox href={'/product/' + product._id}>
-                                                <ProductImageBox>
-                                                    <img src={product.images[0]}></img>
-                                                </ProductImageBox>
-                                                {product.name}
-                                            </ProductInfoBox>  
-                                            <td>
-                                                ${product.price.toFixed(2)}
-                                            </td>
-                                            <td>
-                                                <Button 
-                                                    red={1} outline={1} 
-                                                    onClick={() => removeFav(product._id)}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                    Remove Favourite
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        )}
-                    </Box>
+                    <Title props={'Your favourites'} />
+                    {!favourites?.length &&
+                        <Box>No favourites yet!</Box>
+                    }
+                    {favProducts?.length > 0 && (
+                        <StyledProductsGrid>
+                        {favProducts.map(product => (
+                            <div key={product}>
+                                <ProductWrapper> 
+                                <WhiteBox> 
+                                    <ImageWrapper>
+                                        <Link href={'/product/' + product._id}>
+                                            <img src={product.images?.[0]} alt={product.name} />
+                                        </Link>
+                                    </ImageWrapper>
+                                </WhiteBox> 
+                                <ProductInfoBox>
+                                    <ProductTitle href={'/product/' + product.productID}>{product.name}</ProductTitle>
+                                    <PriceBox>
+                                        <Price>
+                                            ${product.price}
+                                        </Price>
+                                        <Button 
+                                            red={1} outline={1} 
+                                            onClick={() => removeFav(product._id)}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Remove
+                                        </Button>
+                                    </PriceBox>
+                                </ProductInfoBox>
+                            </ProductWrapper>
+                            </div>
+                        ))}
+                        </StyledProductsGrid>
+                    )}
             </Center> 
         </>
     );

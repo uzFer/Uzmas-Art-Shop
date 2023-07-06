@@ -44,7 +44,7 @@ export const ButtonStyle = css`
       background-color: ${redHighlight};
     }
     svg {
-      height: 18px;
+      height: 20px;
       margin-right: 5px;
     }
   `}

@@ -89,7 +89,7 @@ export default function ProductBox({_id, name, description, price, images}) {
     const url = '/product/' + _id;
     const { data: session } = useSession();
 
-    const addProductToCart = (id) => {
+    function addProductToCart(id)  {
         const successMessage = 'Added ' + name + ' to cart!';
         addProduct(id);
         toast.success(successMessage, {
