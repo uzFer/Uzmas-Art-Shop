@@ -115,6 +115,7 @@ const ReviewList = styled.div`
 
 const StarWrapper = styled.div`
     display: flex;
+    margin-top: 35px;
 `;
 
 const TextAreaWrapper = styled.div`
@@ -132,6 +133,7 @@ const ReviewBox = styled.div`
     padding: 10px 30px;
     border-radius: 5px;
     text-align: left;
+    font-weight: bold;
     box-shadow: 0px 6px 4px 0 rgba(0, 0, 0, 0.2), 0px 6px 6px 0 rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease-in-out;
     img {
@@ -149,27 +151,19 @@ const ReviewHeader = styled.div`
         font-weight: bold;
         font-size: 1rem;
     }
-    span {
-        display: none;
-    }
     @media screen and (min-width: 768px) {
         display: flex;
         align-items: center;
         gap: 15px;
         p {
-            font-weight: bold;
             font-size: 1.15rem;
-        }
-        span {
-            display: block;
         }
     }
 `;
 
 const ReviewDate = styled.div`
     color: #777;
-    margin-left: 5px;
-    white-space: nowrap;
+    font-size: 0.9rem;
 `;
 
 const ReviewIconWrapper = styled.div`
@@ -392,28 +386,10 @@ export default function ProductPage({product, categories, allProducts}) {
                         }
                         
                         {session &&
+                        <>
+                            {favProducts?.length > 0 && favProducts.map(fav => (
                             <>
-                                {favProducts?.length > 0 && favProducts.map(fav => (
-                                <>
-                                    {fav.productID !== product._id &&
-                                        <Heart onClick={() => {
-                                            addFav(product.name, session.user.email, product.description, product.price, product.images)
-                                            }}>   
-                                            <Button red outline>Add to fav &lt;3</Button>  
-                                        </Heart>
-                                    }
-                                </>
-                                ))}
-                                {favProducts?.length > 0 && favProducts.map(fav => (
-                                <>
-                                    {fav.productID === product._id && fav.email === session.user.email &&
-                                        <Heart onClick={() => {removeFav(fav._id)}}>   
-                                            <Button red outline>Favourited &lt;3</Button>  
-                                        </Heart>
-                                    }
-                                </>
-                                ))}
-                                {favProducts?.length === 0 &&
+                                {fav.productID !== product._id &&
                                     <Heart onClick={() => {
                                         addFav(product.name, session.user.email, product.description, product.price, product.images)
                                         }}>   
@@ -421,6 +397,24 @@ export default function ProductPage({product, categories, allProducts}) {
                                     </Heart>
                                 }
                             </>
+                            ))}
+                            {favProducts?.length > 0 && favProducts.map(fav => (
+                            <>
+                                {fav.productID === product._id && fav.email === session.user.email &&
+                                    <Heart onClick={() => {removeFav(fav._id)}}>   
+                                        <Button red outline>Favourited &lt;3</Button>  
+                                    </Heart>
+                                }
+                            </>
+                            ))}
+                            {favProducts?.length === 0 &&
+                                <Heart onClick={() => {
+                                    addFav(product.name, session.user.email, product.description, product.price, product.images)
+                                    }}>   
+                                    <Button red outline>Add to fav &lt;3</Button>  
+                                </Heart>
+                            }
+                        </>
                         }
                         </div>
                     </div>
@@ -440,18 +434,18 @@ export default function ProductPage({product, categories, allProducts}) {
                     <>  
                         <StarWrapper>
                             {starsPressed.map((star, index) => (
-                                <>
-                                    {star && 
+                            <>
+                                {star && 
                                     <div onClick={() => pressedStar(index)}>
                                         <FilledStarIcon  />
                                     </div>
-                                    }
-                                    {!star && 
+                                }
+                                {!star && 
                                     <div onClick={() => pressedStar(index)}>
                                         <StarIcon  />
                                     </div>
-                                    }
-                                </>
+                                }
+                            </>
                             ))}
                         </StarWrapper>  
                         
@@ -477,15 +471,6 @@ export default function ProductPage({product, categories, allProducts}) {
                                     <img src={review.image} alt=""/>
                                     <p>{review.name}</p>
 
-                                    <ReviewDate>
-                                        {(new Date(review.updatedAt)).toLocaleString() !== (new Date(review.createdAt)).toLocaleString() &&
-                                            <h4>{(new Date(review.updatedAt)).toLocaleString()} (edited)</h4>
-                                        }
-                                        {(new Date(review.updatedAt)).toLocaleString() === (new Date(review.createdAt)).toLocaleString() &&
-                                            <h4>{(new Date(review.createdAt)).toLocaleString()}</h4>
-                                        }
-                                    </ReviewDate> 
-
                                     {!editing && review.email === session?.user.email && 
                                         <ReviewIconWrapper>
                                             <DeleteWrapper onClick={() => deleteReview(review._id)}>
@@ -501,6 +486,16 @@ export default function ProductPage({product, categories, allProducts}) {
                                         </ReviewIconWrapper>
                                     }
                                 </ReviewHeader>
+
+
+                                <ReviewDate>
+                                    {(new Date(review.updatedAt)).toLocaleString() !== (new Date(review.createdAt)).toLocaleString() &&
+                                        <h4>{(new Date(review.updatedAt)).toLocaleString()} (edited)</h4>
+                                    }
+                                    {(new Date(review.updatedAt)).toLocaleString() === (new Date(review.createdAt)).toLocaleString() &&
+                                        <h4>{(new Date(review.createdAt)).toLocaleString()}</h4>
+                                    }
+                                </ReviewDate> 
 
                                 {editing && editedID === review._id && <>
                                     <StarWrapper>
