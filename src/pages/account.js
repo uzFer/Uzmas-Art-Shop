@@ -13,8 +13,6 @@ import { styled } from "styled-components";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { primary } from "@/lib/colours";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -65,10 +63,10 @@ const Container = styled.div`
     padding: 10px 0 20px 0;
     text-align: center;
     border-radius: 10px;
-`;
-
-const Wrapper = styled.div`
-    display: none;
+    font-size: 0.8rem;
+    @media screen and (min-width: 768px) {
+        font-size: 1rem;
+    }
 `;
 
 

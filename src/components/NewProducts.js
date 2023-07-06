@@ -13,6 +13,10 @@ const Container = styled.div`
     padding: 10px 10px 20px 10px;
     text-align: center;
     border-radius: 10px;
+    font-size: 0.8rem;
+    @media screen and (min-width: 768px) {
+        font-size: 1rem;
+    }
 `;
 
 export default function NewProducts({products}) {
