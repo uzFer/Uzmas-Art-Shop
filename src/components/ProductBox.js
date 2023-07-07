@@ -124,7 +124,7 @@ export default function ProductBox({_id, name, description, price, images}) {
 
     useEffect(() => {
         if(session) {
-            axios.get('/api/userfavourites').then(response => {
+            axios.get('/api/userfavourites?email=' + session.user.email).then(response => {
                 setFavProducts(response.data);
             });
         }
@@ -157,7 +157,7 @@ export default function ProductBox({_id, name, description, price, images}) {
                         ))}
                         {favProducts?.length > 0 && favProducts.map(fav => (
                         <>
-                            {fav.productID === _id && fav.email === session.user.email &&
+                            {fav.productID === _id &&
                                 <Heart onClick={() => {removeFav(fav._id)}}>   
                                     <FilledHeartIcon /> 
                                 </Heart>

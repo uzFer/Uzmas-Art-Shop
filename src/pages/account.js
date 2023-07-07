@@ -169,8 +169,8 @@ export default function AccountPage({allProducts, orders}) {
 
     useEffect(() => {
         if(session) {
-            axios.get('/api/userfavourites').then(response => {
-                setFavProducts(response.data);
+            axios.get('/api/userfavourites?email='+session.user.email).then(response => {
+                setFavProducts(response.data)
             });
         }
     }, [favProducts]);
@@ -202,6 +202,8 @@ export default function AccountPage({allProducts, orders}) {
                     {favProducts?.length > 0 && (
                         <StyledProductsGrid>
                         {favProducts.map(product => (
+                            <>
+                            {/* {product.email === session.user.email && */}
                             <div key={product}>
                                 <ProductWrapper> 
                                 <WhiteBox> 
@@ -229,6 +231,8 @@ export default function AccountPage({allProducts, orders}) {
                                 </ProductInfoBox>
                             </ProductWrapper>
                             </div>
+                            {/*}} */}
+                            </>
                         ))}
                         </StyledProductsGrid>
                     )}

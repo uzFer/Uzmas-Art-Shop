@@ -6,8 +6,8 @@ export default async function handle(req, res) {
     await mongooseConnect();
     
     if(method === 'GET') {
-        if(req.query?.id) {
-            res.json(await Favourite.findOne({_id: req.query.id}));
+        if(req.query?.email) {
+            res.json(await Favourite.find({email: req.query.email}));
         }
         else {
             res.json(await Favourite.find());

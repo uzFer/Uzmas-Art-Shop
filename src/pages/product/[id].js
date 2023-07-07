@@ -20,6 +20,7 @@ import FilledStarIcon from "@/components/icons/FilledStarIcon";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useConfirm } from "material-ui-confirm";
+import ReviewStarIcon from "@/components/icons/ReviewStar";
 
 const ColWrapper = styled.div` 
     display: grid;
@@ -237,17 +238,18 @@ export default function ProductPage({product, categories, allProducts}) {
     }
 
     async function deleteReview(id) {
-        //confirm({ title: 'Are you sure you want to delete your review?', description: "This action is permanent." })
-            //.then( async () => {
-            await axios.delete('/api/review?_id=' + id);
-            //     toast.success('Deleting reivew', {
-            //         position: toast.POSITION.TOP_RIGHT
-            //     });
-            //})
-            // .catch(() => {
-            //     console.log('no')
-            // });
-            fetchReviews();
+        confirm({ title: 'Are you sure you want to delete your review?', description: "This action is permanent." })
+        .then(() => {
+            axios.delete('/api/review?_id=' + id);
+            toast.success('Deleting reivew', {
+                position: toast.POSITION.TOP_RIGHT
+            });
+        })
+        .catch(() => {
+            console.log('no')
+        });
+        
+        fetchReviews();
     }   
 
     async function editReview(_id) {
@@ -318,7 +320,7 @@ export default function ProductPage({product, categories, allProducts}) {
 
     useEffect(() => {
         if(session) {
-            axios.get('/api/userfavourites').then(response => {
+            axios.get('/api/userfavourites?email=' + session.user.email).then(response => {
                 setFavProducts(response.data);
             });
         }
@@ -402,7 +404,7 @@ export default function ProductPage({product, categories, allProducts}) {
                             ))}
                             {favProducts?.length > 0 && favProducts.map(fav => (
                             <>
-                                {fav.productID === product._id && fav.email === session.user.email &&
+                                {fav.productID === product._id &&
                                     <Heart onClick={() => {removeFav(fav._id)}}>   
                                         <Button red outline>Favourited &lt;3</Button>  
                                     </Heart>
@@ -421,7 +423,9 @@ export default function ProductPage({product, categories, allProducts}) {
                         </div>
                     </div>
                 </ColWrapper>
+
                 <hr />  
+
                 <TitleWrapper>
                     <ReviewTitle>Reviews</ReviewTitle>
                 </TitleWrapper>
@@ -541,11 +545,11 @@ export default function ProductPage({product, categories, allProducts}) {
                                 {!editing &&
                                     <>
                                     <StarWrapper>
-                                        {review.numOfStars === 0 && <FilledStarIcon />}
-                                        {review.numOfStars === 1 && <> <FilledStarIcon /> <FilledStarIcon /> </>}
-                                        {review.numOfStars === 2 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> </>}
-                                        {review.numOfStars === 3 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /></>}
-                                        {review.numOfStars === 4 && <> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /> <FilledStarIcon /></>}
+                                        {review.numOfStars === 0 && <ReviewStarIcon />}
+                                        {review.numOfStars === 1 && <> <ReviewStarIcon /> <ReviewStarIcon /> </>}
+                                        {review.numOfStars === 2 && <> <ReviewStarIcon /> <ReviewStarIcon /> <ReviewStarIcon /> </>}
+                                        {review.numOfStars === 3 && <> <ReviewStarIcon /> <ReviewStarIcon /> <ReviewStarIcon /> <ReviewStarIcon /></>}
+                                        {review.numOfStars === 4 && <> <ReviewStarIcon /> <ReviewStarIcon /> <ReviewStarIcon /> <ReviewStarIcon /> <ReviewStarIcon /></>}
                                     </StarWrapper> 
                                     <p>{review.comment}</p>  
                                     </>   
