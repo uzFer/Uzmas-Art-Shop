@@ -206,7 +206,7 @@ export default function AccountPage({allProducts, orders}) {
                                 <ProductWrapper> 
                                 <WhiteBox> 
                                     <ImageWrapper>
-                                        <Link href={'/product/' + product._id}>
+                                        <Link href={'/product/' + product.productID}>
                                             <img src={product.images?.[0]} alt={product.name} />
                                         </Link>
                                     </ImageWrapper>
