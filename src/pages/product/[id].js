@@ -238,16 +238,16 @@ export default function ProductPage({product, categories, allProducts}) {
     }
 
     async function deleteReview(id) {
-        confirm({ title: 'Are you sure you want to delete your review?', description: "This action is permanent." })
-        .then(() => {
+        // confirm({ title: 'Are you sure you want to delete your review?', description: "This action is permanent." })
+        // .then(() => {
             axios.delete('/api/review?_id=' + id);
-            toast.success('Deleting reivew', {
-                position: toast.POSITION.TOP_RIGHT
-            });
-        })
-        .catch(() => {
-            console.log('no')
-        });
+        //     toast.success('Deleting reivew', {
+        //         position: toast.POSITION.TOP_RIGHT
+        //     });
+        // })
+        // .catch(() => {
+        //     console.log('no')
+        // });
         
         fetchReviews();
     }   
