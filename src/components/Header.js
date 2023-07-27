@@ -128,6 +128,10 @@ const Suggestion = styled(Link)`
 const SearchWrapper = styled.div`
     display: flex;
     align-items: center;
+    margin: 20px 0;
+    @media screen and (min-width: 790px) {
+        margin: 0;
+    }
 `;
 
 export default function Header({products}) {
@@ -152,11 +156,7 @@ export default function Header({products}) {
                     </Logo>
 
                     <StyledNav show={showMobileNav ? 1 : 0}>
-                        <NavLink href={'/'}>Home</NavLink>
-                        <NavLink href={'/products'}>Paintings</NavLink>
-                        <NavLink href={'/account'}>Account</NavLink>
-                        <NavLink href={'/cart'}>Cart({cartProducts.length})</NavLink>
-                       
+                        
                         <div>
                             <SearchWrapper>
                                 <Searchbar 
@@ -188,6 +188,11 @@ export default function Header({products}) {
                                 ))}
                             </SuggestionWrapper>
                         </div>
+                        <NavLink href={'/'}>Home</NavLink>
+                        <NavLink href={'/products'}>Paintings</NavLink>
+                        <NavLink href={'/account'}>Account</NavLink>
+                        <NavLink href={'/cart'}>Cart({cartProducts.length})</NavLink>
+                        
                     </StyledNav> 
                     
                     <NavButton onClick={() => setShowMobileNav(!showMobileNav)}>

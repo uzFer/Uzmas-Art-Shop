@@ -10,7 +10,7 @@ const ProductWrapper = styled.div`
     padding: 15px;
     border-radius: 10px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.5fr 1.2fr;
     align-items: center;
     margin: 10px;
     background-color: #fff;
@@ -21,7 +21,10 @@ const ProductWrapper = styled.div`
 
 const ProductImage = styled.img`
     max-height: 100%;
-    width: 150px;
+    width: 120px;
+    @media screen and (min-width: 700px) {
+        width: 150px;
+    }
 `;
 
 const ImageWrapper = styled.div`
