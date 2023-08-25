@@ -1,6 +1,6 @@
 # Uzma's Art Shop
 ### Brief Overview ###
-I have always loved being creative, where I find hobbies in painting, sketching, and graphic design. Similarly, I am very interested in web design and full-stack development. This project serves to combine both of my interests in the form of an e-commerce shop.
+I have always loved being creative, finding hobbies in painting, sketching, and graphic design. Similarly, I am very interested in full-stack development and web design. This project serves to combine both of my interests in the form of an e-commerce shop.
 
 
 https://github.com/uzFer/eCommerce-Art-Shop/assets/109243682/592e2ae0-38b2-471c-8b21-d0a9ff58e5e8
